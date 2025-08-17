@@ -3,41 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vortex Project</title>
+    <meta name="description" content="VortexIRN - پروکسی تلگرام و کانفیگ V2Ray">
+    <meta name="keywords" content="پروکسی, تلگرام, V2Ray, VortexIRN">
+    <meta name="author" content="@im_pwr و @Veuca">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="VortexIRN">
+    <meta property="og:description" content="پروکسی تلگرام و کانفیگ V2Ray">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://veuca.github.io/VorTexIRN/">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VortexIRN">
+    <meta name="twitter:description" content="پروکسی تلگرام و کانفیگ V2Ray">
+    
+    <title>VortexIRN - پروکسی تلگرام و کانفیگ V2Ray</title>
+    
+    <!-- Preload Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌀</text></svg>">
 </head>
 <body>
+    <!-- Loading Animation -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-text">VortexIRN</div>
+        </div>
+    </div>
 
     <div class="main-container">
         <header class="page-header">
-            <h1>VortexIRN</h1>
+            <div class="header-glow"></div>
+            <h1 class="main-title">
+                <span class="title-text">VortexIRN</span>
+                <span class="title-glow"></span>
+            </h1>
+            <p class="header-subtitle">پروژه‌های پیشرفته شبکه</p>
         </header>
         
         <main class="selection-grid">
-            <a href="proxy.html" class="selection-card">
-                <span class="settings-icon">⚙️</span>
+            <a href="proxy.html" class="selection-card active-card" data-card="telegram">
+                <div class="card-glow"></div>
+                <span class="settings-icon" title="تنظیمات">⚙️</span>
                 <div class="card-icon">🛰️</div>
                 <h2>پروکسی تلگرام</h2>
                 <p>لیست پروکسی‌های فعال و پرسرعت</p>
+                <div class="card-status">
+                    <span class="status-indicator active"></span>
+                    <span class="status-text">فعال</span>
+                </div>
             </a>
             
-            <a href="#" class="selection-card disabled">
+            <a href="#" class="selection-card disabled" data-card="v2ray">
+                <div class="card-glow"></div>
                 <div class="card-icon">⚡️</div>
                 <h2>کانفیگ V2Ray</h2>
                 <p>به زودی...</p>
+                <div class="card-status">
+                    <span class="status-indicator coming-soon"></span>
+                    <span class="status-text">به زودی</span>
+                </div>
             </a>
         </main>
+        
+        <!-- Floating Elements -->
+        <div class="floating-elements">
+            <div class="floating-dot dot-1"></div>
+            <div class="floating-dot dot-2"></div>
+            <div class="floating-dot dot-3"></div>
+        </div>
     </div>
 
-    <footer>
-        <span>ساخته شده توسط:</span>
-        <a href="https://t.me/im_pwr" target="_blank">@im_pwr</a>
-        <span> و </span>
-        <a href="https://t.me/Veuca" target="_blank">@Veuca</a>
-        <span>| اسپانسر:</span>
-        <a href="https://t.me/VorTexIRN" target="_blank">@VorTexIRN</a>
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <span class="footer-label">ساخته شده توسط:</span>
+                <a href="https://t.me/im_pwr" target="_blank" rel="noopener" class="footer-link">@im_pwr</a>
+                <span class="footer-separator">و</span>
+                <a href="https://t.me/Veuca" target="_blank" rel="noopener" class="footer-link">@Veuca</a>
+            </div>
+            <div class="footer-section">
+                <span class="footer-label">اسپانسر:</span>
+                <a href="https://t.me/VorTexIRN" target="_blank" rel="noopener" class="footer-link">@VorTexIRN</a>
+            </div>
+        </div>
+        <div class="footer-version">
+            <span>نسخه 2.0</span>
+        </div>
     </footer>
 
+    <!-- JavaScript for Enhanced Interactions -->
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        });
+
+        // Card Hover Effects
+        document.querySelectorAll('.selection-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-12px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add click sound effect (optional)
+        document.querySelectorAll('.selection-card:not(.disabled)').forEach(card => {
+            card.addEventListener('click', function() {
+                // Add ripple effect
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple-effect';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
+            });
+        });
+
+        // Parallax effect for floating elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-dot');
+            
+            parallax.forEach((dot, index) => {
+                const speed = (index + 1) * 0.5;
+                dot.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
 </body>
 </html>
