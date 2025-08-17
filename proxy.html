@@ -8,6 +8,16 @@
   <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="proxy.css"> <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="app-preloader" class="app-preloader">
+        <div class="preloader-content">
+            <div class="vortex-spinner">
+                <div class="ring"></div>
+                <div class="ring r2"></div>
+                <div class="ring r3"></div>
+            </div>
+            <div class="preloader-title">در حال بارگذاری...</div>
+        </div>
+    </div>
     <div class="container">
         <header>
             <h1>⚡️ پروکسی‌های فعال تلگرام</h1>
@@ -54,6 +64,13 @@
         </div>
     </footer>
 
-    <script src="proxy.js"></script>
+    <script>
+      window.addEventListener('load', function () {
+        var preloader = document.getElementById('app-preloader');
+        if (preloader) {
+          setTimeout(function(){ preloader.classList.add('hidden'); }, 250);
+        }
+      });
+    </script>
 </body>
 </html>

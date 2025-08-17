@@ -7,11 +7,23 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="home-page">
+
+    <div id="app-preloader" class="app-preloader">
+        <div class="preloader-content">
+            <div class="vortex-spinner">
+                <div class="ring"></div>
+                <div class="ring r2"></div>
+                <div class="ring r3"></div>
+            </div>
+            <div class="preloader-title">در حال بارگذاری...</div>
+        </div>
+    </div>
 
     <div class="main-container">
         <header class="page-header">
             <h1>VortexIRN</h1>
+            <div class="subtitle">پروکسی‌ و ابزارهای سریع با طراحی مدرن</div>
         </header>
         
         <main class="selection-grid">
@@ -40,4 +52,12 @@
     </footer>
 
 </body>
+<script>
+  window.addEventListener('load', function () {
+    var preloader = document.getElementById('app-preloader');
+    if (preloader) {
+      setTimeout(function(){ preloader.classList.add('hidden'); }, 250);
+    }
+  });
+</script>
 </html>
