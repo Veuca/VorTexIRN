@@ -1,131 +1,274 @@
 /* --- General & Fonts --- */
 :root {
-    --bg-color: #1c1d2c;
-    --card-bg: rgba(40, 45, 70, 0.4);
-    --card-border: rgba(255, 255, 255, 0.1);
-    --card-hover-bg: rgba(40, 45, 70, 0.6);
-    --text-color: #ffffff;
-    --text-secondary: #a0a0b0;
-    --accent-color: #8a42ff;
+	--bg-color: #1c1d2c;
+	--card-bg: rgba(40, 45, 70, 0.4);
+	--card-border: rgba(255, 255, 255, 0.1);
+	--card-hover-bg: rgba(40, 45, 70, 0.6);
+	--text-color: #ffffff;
+	--text-secondary: #a0a0b0;
+	--accent-color: #8a42ff;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body {
-    font-family: 'Vazirmatn', sans-serif;
-    background-color: var(--bg-color);
-    background-image: radial-gradient(circle at 20% 20%, rgba(138, 66, 255, 0.2), transparent 40%),
-                      radial-gradient(circle at 80% 80%, rgba(40, 90, 255, 0.2), transparent 40%);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
+	font-family: 'Vazirmatn', sans-serif;
+	background-color: var(--bg-color);
+	background-image: radial-gradient(circle at 20% 20%, rgba(138, 66, 255, 0.2), transparent 40%),
+				      radial-gradient(circle at 80% 80%, rgba(40, 90, 255, 0.2), transparent 40%);
+	color: var(--text-color);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding: 20px;
 }
 
 .main-container {
-    width: 100%;
-    max-width: 450px; /* Max width for the content area */
-    text-align: center;
+	width: 100%;
+	max-width: 450px; /* Max width for the content area */
+	text-align: center;
 }
 
 /* --- Header --- */
 .page-header {
-    margin-bottom: 40px;
+	margin-bottom: 40px;
 }
 
 .page-header h1 {
-    font-size: 42px;
-    font-weight: 900;
-    color: var(--text-color);
+	font-size: 42px;
+	font-weight: 900;
+	color: var(--text-color);
 }
 
 /* --- Selection Grid & Cards --- */
 .selection-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* Stack cards vertically */
-    gap: 25px;
+	display: grid;
+	grid-template-columns: 1fr; /* Stack cards vertically */
+	gap: 25px;
 }
 
 .selection-card {
-    position: relative;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 24px;
-    padding: 30px;
-    text-decoration: none;
-    color: var(--text-color);
-    backdrop-filter: blur(15px); /* The Glassmorphism effect */
-    -webkit-backdrop-filter: blur(15px); /* For Safari */
-    transition: background-color 0.3s ease, transform 0.3s ease;
+	position: relative;
+	background: var(--card-bg);
+	border: 1px solid var(--card-border);
+	border-radius: 24px;
+	padding: 30px;
+	text-decoration: none;
+	color: var(--text-color);
+	backdrop-filter: blur(15px); /* The Glassmorphism effect */
+	-webkit-backdrop-filter: blur(15px); /* For Safari */
+	transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .selection-card:hover {
-    transform: translateY(-8px);
-    background: var(--card-hover-bg);
+	transform: translateY(-8px);
+	background: var(--card-hover-bg);
 }
 
 .card-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
-    line-height: 1;
+	font-size: 48px;
+	margin-bottom: 15px;
+	line-height: 1;
 }
 
 .selection-card h2 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
+	font-size: 28px;
+	font-weight: 700;
+	margin-bottom: 8px;
 }
 
 .selection-card p {
-    font-size: 16px;
-    color: var(--text-secondary);
-    line-height: 1.6;
+	font-size: 16px;
+	color: var(--text-secondary);
+	line-height: 1.6;
 }
 
 .settings-icon {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 24px;
-    color: var(--text-secondary);
-    opacity: 0.7;
-    transition: transform 0.3s ease;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 24px;
+	color: var(--text-secondary);
+	opacity: 0.7;
+	transition: transform 0.3s ease;
 }
 .selection-card:hover .settings-icon {
-    transform: rotate(90deg);
+	transform: rotate(90deg);
 }
 
 
 .selection-card.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+	opacity: 0.6;
+	cursor: not-allowed;
 }
 
 .selection-card.disabled:hover {
-    transform: none;
-    background: var(--card-bg);
+	transform: none;
+	background: var(--card-bg);
 }
 
 /* --- Footer --- */
 footer {
-    width: 100%;
-    padding: 20px;
-    text-align: center;
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-top: 40px;
+	width: 100%;
+	padding: 20px;
+	text-align: center;
+	font-size: 14px;
+	color: var(--text-secondary);
+	margin-top: 40px;
 }
 
 footer a {
-    color: var(--accent-color);
-    text-decoration: none;
-    font-weight: bold;
-    margin: 0 3px;
+	color: var(--accent-color);
+	text-decoration: none;
+	font-weight: bold;
+	margin: 0 3px;
+}
+
+/* --- Enhanced landing page responsive redesign (overrides) --- */
+:root {
+	--bg-color: #0f1020;
+	--bg-gradient-1: #6d4aff;
+	--bg-gradient-2: #2dd4bf;
+	--bg-gradient-3: #60a5fa;
+	--card-bg: rgba(24, 26, 48, 0.55);
+	--card-border: rgba(255, 255, 255, 0.12);
+	--card-hover-bg: rgba(24, 26, 48, 0.75);
+	--text-color: #ffffff;
+	--text-secondary: #b3b6c9;
+	--accent-color: #8a42ff;
+	--glow: 0 10px 40px rgba(138, 66, 255, 0.25);
+}
+
+body {
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	padding: clamp(16px, 2.5vw, 28px);
+	position: relative;
+	overflow-x: hidden;
+}
+
+/* Animated Aurora background */
+body::before,
+body::after {
+	content: "";
+	position: absolute;
+	inset: -20% -10% auto -10%;
+	height: 120vh;
+	background: radial-gradient(60% 50% at 15% 15%, rgba(109, 74, 255, 0.5) 0%, transparent 70%),
+				radial-gradient(50% 40% at 85% 25%, rgba(45, 212, 191, 0.45) 0%, transparent 70%),
+				radial-gradient(55% 45% at 30% 85%, rgba(96, 165, 250, 0.45) 0%, transparent 70%);
+	filter: blur(60px) saturate(120%);
+	opacity: 0.55;
+	z-index: -2;
+	animation: floatBg 18s ease-in-out infinite;
+}
+body::after {
+	inset: auto -10% -20% -10%;
+	transform: scaleX(-1);
+	animation-duration: 24s;
+	opacity: 0.4;
+}
+
+@keyframes floatBg {
+	0%, 100% { transform: translateY(0) scale(1); }
+	50% { transform: translateY(-20px) scale(1.02); }
+}
+
+.main-container {
+	width: min(100%, 900px);
+	text-align: center;
+}
+
+.page-header { margin-bottom: clamp(18px, 5vw, 44px); }
+.brand {
+	font-size: clamp(34px, 6vw, 64px);
+	font-weight: 900;
+	letter-spacing: -0.5px;
+	line-height: 1.05;
+	color: var(--text-color);
+	background: linear-gradient(90deg, #ffffff, #c7c9de 60%, #ffffff);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	filter: drop-shadow(0 6px 24px rgba(0,0,0,0.25));
+}
+.tagline {
+	margin-top: 8px;
+	color: var(--text-secondary);
+	font-size: clamp(14px, 2.6vw, 18px);
+}
+
+.selection-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(14px, 3vw, 26px);
+}
+@media (min-width: 620px) {
+	.selection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.selection-card {
+	position: relative;
+	background: var(--card-bg);
+	border: 1px solid var(--card-border);
+	border-radius: 22px;
+	padding: clamp(22px, 3.5vw, 30px);
+	text-decoration: none;
+	color: var(--text-color);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+	transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+	box-shadow: var(--glow);
+}
+.selection-card:hover {
+	transform: translateY(-6px);
+	background: var(--card-hover-bg);
+	box-shadow: 0 14px 55px rgba(0, 0, 0, 0.35);
+}
+.selection-card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	padding: 1px;
+	background: linear-gradient(135deg, rgba(109, 74, 255, 0.6), rgba(45, 212, 191, 0.35));
+	-webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+			mask-composite: exclude;
+	pointer-events: none;
+}
+
+.card-icon {
+	font-size: clamp(38px, 6vw, 56px);
+	margin-bottom: 14px;
+	line-height: 1;
+}
+.selection-card h2 {
+	font-size: clamp(20px, 3.4vw, 26px);
+	font-weight: 800;
+	margin-bottom: 6px;
+}
+.selection-card p {
+	font-size: clamp(13px, 2.6vw, 16px);
+	color: var(--text-secondary);
+	line-height: 1.7;
+}
+.settings-icon {
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	font-size: 22px;
+	color: var(--text-secondary);
+	opacity: 0.75;
+	transition: transform 0.35s ease;
+}
+
+footer {
+	padding: clamp(14px, 2.4vw, 20px);
+	margin-top: clamp(24px, 6vw, 44px);
 }
