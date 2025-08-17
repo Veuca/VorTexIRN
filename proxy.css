@@ -1,0 +1,275 @@
+/* این کد را برای فعال کردن اسکرول به ابتدای فایل اضافه کنید */
+body {
+    overflow: auto !important;
+}
+
+/* --- Color Variables --- */
+:root {
+    --primary-hue: 210;
+    --secondary-hue: 260;
+    --transition-speed: 0.3s;
+    
+    /* Light Mode (Default) */
+    --bg-color: #f0f2f5;
+    --text-color: #1c1e21;
+    --text-secondary: #606770;
+    --card-bg: #ffffff;
+    --border-color: #e4e6eb;
+    --green-color: #31a24c;
+    --blue-color: hsl(var(--primary-hue), 90%, 55%);
+    --purple-color: hsl(var(--secondary-hue), 80%, 60%);
+    --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode {
+    /* Dark Mode */
+    --bg-color: #121212;
+    --text-color: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --card-bg: #1e1e1e;
+    --border-color: #3a3b3c;
+    --green-color: #28a745;
+    --blue-color: hsl(var(--primary-hue), 90%, 65%);
+    --purple-color: hsl(var(--secondary-hue), 80%, 70%);
+    --shadow-color: rgba(0, 0, 0, 0.15);
+}
+
+/* --- General & Transitions --- */
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+    line-height: 1.6;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 25px 15px;
+    padding-bottom: 80px; /* To make space for the fixed footer */
+}
+
+/* --- Header & Theme Switcher --- */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--blue-color), var(--purple-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+.header-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.theme-switcher {
+    position: relative;
+}
+.theme-switcher input {
+    display: none;
+}
+.theme-switcher label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60px;
+    height: 30px;
+    background-color: var(--border-color);
+    border-radius: 30px;
+    cursor: pointer;
+    padding: 5px;
+    position: relative;
+    transition: background-color var(--transition-speed) ease;
+}
+.theme-switcher label::after {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    transition: transform var(--transition-speed) ease;
+    transform: translateX(0);
+}
+.theme-switcher input:checked + label::after {
+    transform: translateX(30px);
+}
+.theme-switcher span { font-size: 14px; }
+
+/* --- Info Bar & Controls --- */
+.info-bar {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-speed) ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+#summary-text { color: var(--text-secondary); }
+.controls select {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-speed) ease;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-family: 'Vazirmatn', sans-serif;
+    cursor: pointer;
+}
+
+/* --- Proxy Card (با انیمیشن) --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.proxy-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    transition: all var(--transition-speed) ease;
+    animation: fadeIn 0.5s ease forwards;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+.proxy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px var(--shadow-color);
+    border-color: var(--blue-color);
+}
+.card-main {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.proxy-title { font-size: 22px; font-weight: 700; word-break: break-all; }
+.proxy-stats { display: flex; gap: 20px; text-align: center; }
+.stat-item { font-size: 14px; color: var(--text-secondary); }
+.stat-item span { display: block; font-weight: 700; font-size: 18px; color: var(--text-color); }
+.card-footer {
+    padding: 15px 20px;
+    background-color: var(--bg-color);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 12px;
+    transition: all var(--transition-speed) ease;
+}
+
+/* --- Buttons & Loader --- */
+.action-btn { flex-grow: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.2s ease; }
+.connect-btn { background: linear-gradient(45deg, var(--green-color), #29b345); color: white; box-shadow: 0 4px 10px rgba(49, 162, 76, 0.3); }
+.connect-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(49, 162, 76, 0.4); }
+.copy-btn { background: linear-gradient(45deg, var(--blue-color), var(--purple-color)); color: white; box-shadow: 0 4px 10px hsla(var(--primary-hue), 90%, 55%, 0.3); }
+.copy-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px hsla(var(--primary-hue), 90%, 55%, 0.4); }
+.copy-btn.copied { background: #6e7681; box-shadow: none; }
+#refreshBtn { background: var(--card-bg); color: var(--text-color); box-shadow: 0 4px 15px var(--shadow-color); transition: all var(--transition-speed) ease; padding: 12px 24px; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; }
+#refreshBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow-color); }
+.loader { border: 5px solid var(--border-color); border-top: 5px solid var(--blue-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 40px auto; display: none; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* --- کدهای جدید برای صفحه V2Ray --- */
+
+/* Protocol Selector Buttons */
+.protocol-selector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.protocol-btn {
+    background-color: var(--card-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.protocol-btn:hover {
+    color: var(--text-color);
+    border-color: var(--accent-color, var(--blue-color));
+}
+.protocol-btn.active {
+    background-color: var(--accent-color, var(--blue-color));
+    color: white;
+    border-color: var(--accent-color, var(--blue-color));
+}
+
+/* QR Code Modal */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+}
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    width: 90%;
+    max-width: 300px;
+    text-align: center;
+    border-radius: 16px;
+}
+.close-btn {
+    color: var(--text-secondary);
+    float: left;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+#qrcode {
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 20px;
+    max-width: 100%;
+}
+#qrcode img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Back Button */
+#backBtn {
+    background: var(--card-bg);
+    color: var(--text-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    transition: all var(--transition-speed) ease;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 10px;
+    text-decoration: none;
+}
+#backBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-color);
+}

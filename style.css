@@ -1,0 +1,131 @@
+/* --- General & Fonts --- */
+:root {
+    --bg-color: #1c1d2c;
+    --card-bg: rgba(40, 45, 70, 0.4);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --card-hover-bg: rgba(40, 45, 70, 0.6);
+    --text-color: #ffffff;
+    --text-secondary: #a0a0b0;
+    --accent-color: #8a42ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: var(--bg-color);
+    background-image: radial-gradient(circle at 20% 20%, rgba(138, 66, 255, 0.2), transparent 40%),
+                      radial-gradient(circle at 80% 80%, rgba(40, 90, 255, 0.2), transparent 40%);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 450px; /* Max width for the content area */
+    text-align: center;
+}
+
+/* --- Header --- */
+.page-header {
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--text-color);
+}
+
+/* --- Selection Grid & Cards --- */
+.selection-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Stack cards vertically */
+    gap: 25px;
+}
+
+.selection-card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 30px;
+    text-decoration: none;
+    color: var(--text-color);
+    backdrop-filter: blur(15px); /* The Glassmorphism effect */
+    -webkit-backdrop-filter: blur(15px); /* For Safari */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.selection-card:hover {
+    transform: translateY(-8px);
+    background: var(--card-hover-bg);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    line-height: 1;
+}
+
+.selection-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.selection-card p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.settings-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    transition: transform 0.3s ease;
+}
+.selection-card:hover .settings-icon {
+    transform: rotate(90deg);
+}
+
+
+.selection-card.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.selection-card.disabled:hover {
+    transform: none;
+    background: var(--card-bg);
+}
+
+/* --- Footer --- */
+footer {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 40px;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 3px;
+}

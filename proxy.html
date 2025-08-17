@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست پروکسی تلگرام</title>
+  <script src="proxy.js?v=1.1"></script>
+  <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="proxy.css"> <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡️ پروکسی‌های فعال تلگرام</h1>
+            <div class="header-controls">
+                <div class="theme-switcher">
+                    <input type="checkbox" id="theme-toggle">
+                    <label for="theme-toggle">
+                        <span class="sun">☀️</span>
+                        <span class="moon">🌙</span>
+                    </label>
+                </div>
+                <button id="refreshBtn">بروزرسانی</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="info-bar">
+                <div id="summary-text">درحال دریافت اطلاعات...</div>
+                <div class="controls">
+                    <label for="itemsPerPage">نمایش:</label>
+                    <select id="itemsPerPage">
+                        <option value="10" selected>۱۰ پروکسی</option>
+                        <option value="20">۲۰ پروکسی</option>
+                        <option value="50">۵۰ پروکسی</option>
+                        <option value="all">همه</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="loader" class="loader"></div>
+            <div id="proxy-list-container">
+                </div>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="popup-content">
+            <span>ساخته شده توسط:</span>
+            <a href="https://t.me/im_pwr" target="_blank">@im_pwr</a>
+            <span> و </span>
+            <a href="https://t.me/Veuca" target="_blank">@Veuca</a>
+            <span>| اسپانسر:</span>
+            <a href="https://t.me/VorTexIRN" target="_blank">@VorTexIRN</a>
+        </div>
+    </footer>
+
+    <script src="proxy.js"></script>
+</body>
+</html>
