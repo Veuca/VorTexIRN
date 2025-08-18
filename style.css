@@ -212,6 +212,12 @@ body.preloading footer { opacity: 0; transform: translateY(10px); filter: blur(2
 body.page-enter .main-container,
 body.page-enter footer { opacity: 1; transform: translateY(0); filter: none; transition: all 600ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 
+/* Page enter diagonal wipe mask */
+body.preloading::marker { content: ""; }
+.home-page::before { transition: clip-path 700ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 700ms; }
+.home-page.preloading::before { content: ""; position: fixed; inset: 0; background: var(--bg-color); z-index: 9998; opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+.home-page.page-enter::before { opacity: 0; clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+
 /* Rocket preloader visuals (home only) */
 .home-page .app-preloader { background: radial-gradient(1200px 800px at 20% 80%, rgba(138,66,255,0.15), transparent 60%), radial-gradient(1200px 800px at 80% 20%, rgba(40,90,255,0.15), transparent 60%), var(--bg-color); }
 .rocket-scene { position: absolute; inset: 0; overflow: hidden; }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vortex Project</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="home-page preloading">
@@ -61,13 +61,12 @@
       document.body.classList.add('page-enter');
       if (preloader) preloader.classList.add('hidden');
     }
-    window.addEventListener('load', function(){
-      // Fallback reveal in case animation is interrupted
-      setTimeout(revealPage, 2300);
-    });
+    // Start a fallback timer to guarantee reveal (in case animation event is missed)
+    var fallbackTimer = setTimeout(revealPage, 3000);
     // Prefer revealing exactly when rocket exits the screen
     document.addEventListener('animationend', function(e){
       if (e && e.target && e.target.id === 'rocket') {
+        clearTimeout(fallbackTimer);
         revealPage();
       }
     }, { passive: true });
