@@ -219,25 +219,48 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (type === 'vmess') {
                 const b64 = line.slice('vmess://'.length).trim();
-                // Some lists may have URL-safe base64
-                const normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
+                const normalized = normalizeBase64(b64);
                 const jsonStr = atob(normalized);
                 const obj = JSON.parse(jsonStr);
                 if (obj && obj.add && obj.port) {
                     return { host: obj.add, port: String(obj.port) };
                 }
             } else if (type === 'vless' || type === 'trojan') {
-                const url = new URL(line);
-                return { host: url.hostname, port: url.port || (url.protocol === 'vless:' ? '443' : '443') };
+                // Some browsers may not parse custom schemes; fallback manual
+                let host = '';
+                let port = '';
+                try {
+                    const urlObj = new URL(line);
+                    host = urlObj.hostname;
+                    port = urlObj.port;
+                } catch (_) {
+                    const withoutScheme = line.replace(/^\w+:\/\//, '');
+                    const afterAt = withoutScheme.split('@').pop();
+                    const hostPort = (afterAt || '').split('?')[0];
+                    const parts = hostPort.split(':');
+                    host = parts[0] || '';
+                    port = parts[1] || '';
+                }
+                return { host, port: port || '443' };
             } else if (type === 'ss') {
                 // ss://[base64(method:password@host:port)] or ss://method:password@host:port#tag
                 const raw = line.slice('ss://'.length);
                 if (raw.includes('@')) {
-                    const tmp = new URL(line.replace('ss://', 'http://'));
+                    let tmp;
+                    try {
+                        tmp = new URL(line.replace('ss://', 'http://'));
+                    } catch (_) {
+                        // manual fallback
+                        const withoutScheme = raw;
+                        const afterAt = withoutScheme.split('@').pop();
+                        const hostPort = (afterAt || '').split('#')[0].split('?')[0];
+                        const hp = hostPort.split(':');
+                        return { host: hp[0] || '', port: hp[1] || '443' };
+                    }
                     return { host: tmp.hostname, port: tmp.port || '443' };
                 } else {
                     const b64 = raw.split('#')[0];
-                    const normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
+                    const normalized = normalizeBase64(b64);
                     const decoded = atob(normalized);
                     const atIndex = decoded.lastIndexOf('@');
                     if (atIndex !== -1) {
@@ -251,6 +274,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // ignore parsing errors
         }
         return null;
+    }
+
+    function normalizeBase64(input) {
+        const replaced = input.replace(/-/g, '+').replace(/_/g, '/');
+        const padLen = (4 - (replaced.length % 4)) % 4;
+        return replaced + '='.repeat(padLen);
     }
 
     async function measurePing(host, port) {
