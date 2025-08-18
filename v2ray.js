@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const cls = pingMs <= 150 ? 'ping-good' : pingMs <= 500 ? 'ping-mid' : 'ping-bad';
                     pingBadge.textContent = `${pingMs}ms`;
                     pingBadge.classList.add(cls);
+                    card.classList.add(cls);
                 } else {
                     pingBadge.textContent = 'نامشخص';
                 }
