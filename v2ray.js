@@ -31,21 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     const summaryText = document.getElementById('summary-text');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
-    const protocolSelector = document.getElementById('protocolSelector');
+    // Protocol selector removed
     // Removed manual import elements
 
-    const endpoints = {
-        all: 'https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/all_extracted_configs.txt',
-        ss: 'https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/ss_configs.txt',
-        trojan: 'https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/trojan_configs.txt',
-        vless: 'https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/vless_configs.txt',
-        vmess: 'https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/vmess_configs.txt'
-    };
+    const V2RAY_URL = 'https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/v2ray/all_sub.txt';
 
     // State
     let allConfigs = [];
-    let filteredConfigs = [];
-    let selectedProtocol = 'all';
     let itemsPerPage = 10;
 
     // Fetch with CORS fallback
@@ -74,14 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
         configListContainer.innerHTML = '';
 
         try {
-            // Fetch chosen protocol list; for 'all' use the "all" file for performance
-            const url = endpoints[selectedProtocol];
-            const data = await fetchTextWithCors(url);
+            const data = await fetchTextWithCors(V2RAY_URL);
 
-            // Split by lines, trim empty
-            allConfigs = data.split('\n').map(l => l.trim()).filter(Boolean);
+            // Split by lines, trim empty and keep only known schemes
+            allConfigs = data.split('\n')
+                .map(l => l.trim())
+                .filter(Boolean)
+                .filter(line => /^(vmess|vless|trojan|ss):\/\//i.test(line));
 
-            filterByProtocol();
             itemsPerPage = itemsPerPageSelect.value === 'all' ? 'all' : parseInt(itemsPerPageSelect.value);
             updateSummary();
             renderConfigs();
@@ -93,21 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function filterByProtocol() {
-        const lowerStarts = (line, scheme) => line.toLowerCase().startsWith(`${scheme}://`);
-        if (selectedProtocol === 'all') {
-            filteredConfigs = allConfigs.filter(line => (
-                lowerStarts(line, 'vmess') || lowerStarts(line, 'vless') || lowerStarts(line, 'trojan') || lowerStarts(line, 'ss')
-            ));
-            return;
-        }
-        const schema = selectedProtocol + '://';
-        filteredConfigs = allConfigs.filter(line => line.toLowerCase().startsWith(schema));
-    }
+    // Removed protocol filtering; we use a unified list
 
     function renderConfigs() {
         configListContainer.innerHTML = '';
-        const list = itemsPerPage === 'all' ? filteredConfigs : filteredConfigs.slice(0, itemsPerPage);
+        const list = itemsPerPage === 'all' ? allConfigs : allConfigs.slice(0, itemsPerPage);
         if (list.length === 0) {
             configListContainer.innerHTML = '<p>کانفیگی یافت نشد.</p>';
             return;
@@ -201,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateSummary() {
-        summaryText.textContent = `✅ ${filteredConfigs.length} کانفیگ یافت شد`;
+        summaryText.textContent = `✅ ${allConfigs.length} کانفیگ یافت شد`;
     }
 
     function showLoader(isLoading) {
@@ -296,14 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
         renderConfigs();
     });
-    protocolSelector.addEventListener('click', (e) => {
-        const btn = e.target.closest('.protocol-btn');
-        if (!btn) return;
-        document.querySelectorAll('.protocol-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedProtocol = btn.dataset.protocol;
-        initialize();
-    });
+    // protocol selector removed
 
     // Manual import feature removed per requirements
 
