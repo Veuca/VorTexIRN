@@ -39,14 +39,7 @@ body {
 .page-header {
     margin-bottom: 40px;
 }
-.topbar { display: flex; justify-content: flex-start; align-items: center; margin-bottom: 8px; }
-.hamburger { width: 42px; height: 36px; border-radius: 10px; border: 1px solid var(--card-border); background: var(--card-bg); display: inline-flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; transition: all 0.2s ease; }
-.hamburger:hover { background: var(--card-hover-bg); transform: translateY(-1px); }
-.hamburger span { display: block; width: 18px; height: 2px; background: var(--text-color); border-radius: 2px; }
-
-.more-menu { margin-top: 16px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-.more-menu .more-title { font-weight: 900; margin-bottom: 8px; opacity: 0.9; }
-.more-menu ul { list-style: none; color: var(--text-secondary); line-height: 1.9; }
+/* removed hamburger and more menu */
 
 
 .page-header h1 {

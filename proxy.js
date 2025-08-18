@@ -95,9 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const tgUrl = url.replace('https://t.me/', 'tg://');
         
         const card = document.createElement('div');
-        card.className = 'proxy-card';
-
         const pingClass = ping <= 150 ? 'ping-good' : ping <= 400 ? 'ping-mid' : 'ping-bad';
+        card.className = `proxy-card ${pingClass}`;
+
         const pingLabel = ping <= 150 ? 'خوبه' : ping <= 400 ? 'متوسط' : 'ضعیف';
 
         const telegramIcon = `

@@ -23,11 +23,6 @@
 
     <div class="main-container">
         <header class="page-header">
-            <div class="topbar">
-                <button id="hamburgerBtn" class="hamburger" aria-label="more">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
             <h1>VortexIRN</h1>
             <div class="subtitle">پروکسی‌ و ابزارهای سریع با طراحی مدرن</div>
         </header>
@@ -46,14 +41,6 @@
                 <p>لیست کانفیگ‌های رایگان (VMess, VLess, Trojan, SS)</p>
             </a>
         </main>
-        <nav id="moreMenu" class="more-menu" hidden>
-            <div class="more-title">قابلیت‌های بیشتر بزودی</div>
-            <ul>
-                <li>• بهبود فیلتر پینگ</li>
-                <li>• اتصال مستقیم به کلاینت‌ها</li>
-                <li>• به‌روزرسانی خودکار</li>
-            </ul>
-        </nav>
     </div>
 
     <footer>
@@ -84,14 +71,6 @@
       }
     }, { passive: true });
 
-    // Hamburger toggle
-    var hb = document.getElementById('hamburgerBtn');
-    var menu = document.getElementById('moreMenu');
-    if (hb && menu) {
-      hb.addEventListener('click', function(){
-        if (menu.hasAttribute('hidden')) menu.removeAttribute('hidden'); else menu.setAttribute('hidden', '');
-      });
-    }
   })();
 </script>
 </html>
