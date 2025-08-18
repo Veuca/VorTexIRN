@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست کانفیگ‌های V2Ray</title>
+    <script src="v2ray.js?v=1.0"></script>
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="proxy.css"> <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Overrides specific to V2Ray page if needed */
+        .config-card .config-type { font-weight: 800; font-size: 12px; color: var(--text-secondary); }
+        .config-card .config-title { font-size: 18px; font-weight: 800; word-break: break-all; }
+        .config-card .config-meta { display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary); }
+        .config-card .config-meta span { display: inline-flex; gap: 6px; align-items: center; }
+        .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 800; color: #fff; }
+        .pill.vmess { background: linear-gradient(45deg, #7c4dff, #4db8ff); }
+        .pill.vless { background: linear-gradient(45deg, #00c9a7, #4db8ff); }
+        .pill.trojan { background: linear-gradient(45deg, #ff6b6b, #ff8e53); }
+        .pill.ss { background: linear-gradient(45deg, #6c757d, #9aa0a6); }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛰️ کانفیگ‌های رایگان V2Ray</h1>
+            <div class="header-controls">
+                <div class="theme-switcher">
+                    <input type="checkbox" id="theme-toggle">
+                    <label for="theme-toggle">
+                        <span class="sun">☀️</span>
+                        <span class="moon">🌙</span>
+                    </label>
+                </div>
+                <a id="backBtn" href="index.html">بازگشت</a>
+                <button id="refreshBtn">بروزرسانی</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="info-bar">
+                <div id="summary-text">درحال دریافت کانفیگ‌ها...</div>
+                <div class="protocol-selector" id="protocolSelector">
+                    <button class="protocol-btn active" data-protocol="all">همه</button>
+                    <button class="protocol-btn" data-protocol="vmess">VMess</button>
+                    <button class="protocol-btn" data-protocol="vless">VLess</button>
+                    <button class="protocol-btn" data-protocol="trojan">Trojan</button>
+                    <button class="protocol-btn" data-protocol="ss">Shadowsocks</button>
+                </div>
+                <div class="controls">
+                    <label for="itemsPerPage">نمایش:</label>
+                    <select id="itemsPerPage">
+                        <option value="10" selected>۱۰ کانفیگ</option>
+                        <option value="20">۲۰ کانفیگ</option>
+                        <option value="50">۵۰ کانفیگ</option>
+                        <option value="all">همه</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="loader" class="loader"></div>
+            <div id="config-list-container"></div>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="popup-content">
+            <span>ساخته شده توسط:</span>
+            <a href="https://t.me/im_pwr" target="_blank">@im_pwr</a>
+            <span> و </span>
+            <a href="https://t.me/Veuca" target="_blank">@Veuca</a>
+            <span>| اسپانسر:</span>
+            <a href="https://t.me/VorTexIRN" target="_blank">@VorTexIRN</a>
+        </div>
+    </footer>
+</body>
+</html>
