@@ -136,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="config-meta">
                         <span class="config-type">پروتکل: <span class="pill ${type}">${type}</span></span>
                         <span>طول: ${configLine.length}</span>
+                        <span class="host-field" hidden>سرور: <strong class="host-val"></strong></span>
+                        <span class="port-field" hidden>پورت: <strong class="port-val"></strong></span>
+                        <span class="ping-field" hidden>پینگ: <span class="ping-badge">—</span></span>
                     </div>
                 </div>
             </div>
@@ -156,6 +159,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 1500);
             });
         });
+
+        // Try to parse server and measure ping
+        const parsed = parseServerFromConfig(configLine, type);
+        if (parsed && parsed.host && parsed.port) {
+            const hostField = card.querySelector('.host-field');
+            const portField = card.querySelector('.port-field');
+            const pingField = card.querySelector('.ping-field');
+            const hostVal = card.querySelector('.host-val');
+            const portVal = card.querySelector('.port-val');
+            hostVal.textContent = parsed.host;
+            portVal.textContent = parsed.port;
+            hostField.removeAttribute('hidden');
+            portField.removeAttribute('hidden');
+            pingField.removeAttribute('hidden');
+
+            measurePing(parsed.host, parsed.port).then((pingMs) => {
+                const pingBadge = card.querySelector('.ping-badge');
+                if (typeof pingMs === 'number') {
+                    const cls = pingMs <= 150 ? 'ping-good' : pingMs <= 500 ? 'ping-mid' : 'ping-bad';
+                    pingBadge.textContent = `${pingMs}ms`;
+                    pingBadge.classList.add(cls);
+                } else {
+                    pingBadge.textContent = 'نامشخص';
+                }
+            });
+        }
 
         return card;
     }
@@ -181,6 +210,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showLoader(isLoading) {
         loader.style.display = isLoading ? 'block' : 'none';
+        const overlay = document.getElementById('page-preloader');
+        if (overlay) overlay.style.display = isLoading ? 'flex' : 'none';
+    }
+
+    // Parse host/port from various config schemes
+    function parseServerFromConfig(line, type) {
+        try {
+            if (type === 'vmess') {
+                const b64 = line.slice('vmess://'.length).trim();
+                // Some lists may have URL-safe base64
+                const normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonStr = atob(normalized);
+                const obj = JSON.parse(jsonStr);
+                if (obj && obj.add && obj.port) {
+                    return { host: obj.add, port: String(obj.port) };
+                }
+            } else if (type === 'vless' || type === 'trojan') {
+                const url = new URL(line);
+                return { host: url.hostname, port: url.port || (url.protocol === 'vless:' ? '443' : '443') };
+            } else if (type === 'ss') {
+                // ss://[base64(method:password@host:port)] or ss://method:password@host:port#tag
+                const raw = line.slice('ss://'.length);
+                if (raw.includes('@')) {
+                    const tmp = new URL(line.replace('ss://', 'http://'));
+                    return { host: tmp.hostname, port: tmp.port || '443' };
+                } else {
+                    const b64 = raw.split('#')[0];
+                    const normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
+                    const decoded = atob(normalized);
+                    const atIndex = decoded.lastIndexOf('@');
+                    if (atIndex !== -1) {
+                        const hostPort = decoded.substring(atIndex + 1);
+                        const [host, port] = hostPort.split(':');
+                        if (host && port) return { host, port };
+                    }
+                }
+            }
+        } catch (e) {
+            // ignore parsing errors
+        }
+        return null;
+    }
+
+    async function measurePing(host, port) {
+        try {
+            const start = Date.now();
+            const target = `http://${host}:${port}`;
+            const proxied = `https://api.allorigins.win/get?url=${encodeURIComponent(target)}`;
+            await fetch(proxied, { method: 'GET', cache: 'no-store' });
+            return Date.now() - start;
+        } catch (e) {
+            return null;
+        }
     }
 
     // Events

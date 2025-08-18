@@ -100,6 +100,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const pingClass = ping <= 150 ? 'ping-good' : ping <= 400 ? 'ping-mid' : 'ping-bad';
         const pingLabel = ping <= 150 ? 'خوبه' : ping <= 400 ? 'متوسط' : 'ضعیف';
 
+        const telegramIcon = `
+            <svg class="tg-svg" viewBox="0 0 240 240" width="18" height="18" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="tgGradient" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#37aee2"></stop>
+                        <stop offset="100%" stop-color="#1e96c8"></stop>
+                    </linearGradient>
+                </defs>
+                <circle cx="120" cy="120" r="120" fill="url(#tgGradient)" />
+                <path fill="#c8daea" d="M98 175c-4 0-4-2-6-6l-15-48 110-65"/>
+                <path fill="#a9c9dd" d="M98 175c3 0 5-1 7-3l19-18-23-14"/>
+                <path fill="#fff" d="M101 140l63 47c7 4 13 2 15-7l27-126c3-13-5-19-13-15L45 99c-12 5-12 12-2 15l39 12 90-56c4-3 7-1 4 2"/>
+            </svg>`;
         card.innerHTML = `
             <div class="card-main">
                 <div class="proxy-title">پروکسی ${number}</div>
@@ -109,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <div class="card-footer">
-                <a href="${tgUrl}" class="action-btn connect-btn"><span class="tg">📨</span> اتصال</a>
+                <a href="${tgUrl}" class="action-btn connect-btn"><span class="tg-icon">${telegramIcon}</span> اتصال</a>
                 <button class="action-btn copy-btn">📋 کپی</button>
             </div>
         `;
