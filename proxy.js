@@ -95,12 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'proxy-card';
 
+        const pingClass = ping <= 150 ? 'ping-good' : ping <= 400 ? 'ping-mid' : 'ping-bad';
+        const pingLabel = ping <= 150 ? 'خوبه' : ping <= 400 ? 'متوسط' : 'ضعیف';
+
         card.innerHTML = `
             <div class="card-main">
                 <div class="proxy-title">پروکسی ${number}</div>
                 <div class="proxy-stats">
                     <div class="stat-item">Port<span>${port}</span></div>
-                    <div class="stat-item">Ping<span>${ping}ms</span></div>
+                    <div class="stat-item">Ping<span><span class="ping-badge ${pingClass}">${ping}ms • ${pingLabel}</span></span></div>
                 </div>
             </div>
             <div class="card-footer">
