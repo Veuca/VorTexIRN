@@ -57,6 +57,16 @@
                     </select>
                 </div>
             </div>
+            <div class="manual-import">
+                <button id="toggleImport" class="outline-btn">افزودن دستی</button>
+                <div id="importPanel" class="import-panel" hidden>
+                    <textarea id="importTextarea" rows="6" placeholder="لیست کانفیگ‌ها را اینجا پیست کنید...\nمثال: vmess://...\nvless://...\ntrojan://...\nss://..."></textarea>
+                    <div class="import-actions">
+                        <button id="applyImport">افزودن</button>
+                        <button id="clearImport" class="danger">پاک کردن</button>
+                    </div>
+                </div>
+            </div>
 
             <div id="loader" class="loader"></div>
             <div id="config-list-container"></div>
