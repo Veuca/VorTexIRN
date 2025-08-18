@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const proxyListContainer = document.getElementById('proxy-list-container');
     const loader = document.getElementById('loader');
     const summaryText = document.getElementById('summary-text');
+    const pingLegend = document.getElementById('ping-legend');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
 
     const apiUrl = `https://raw.githubusercontent.com/SoliSpirit/mtproto/master/all_proxies.txt?_=${new Date().getTime()}`;
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             itemsPerPage = itemsPerPageSelect.value === 'all' ? 'all' : parseInt(itemsPerPageSelect.value);
             updateSummary();
+            updateLegend();
             renderProxies();
 
         } catch (error) {
@@ -107,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <div class="card-footer">
-                <a href="${tgUrl}" class="action-btn connect-btn">🚀 اتصال</a>
+                <a href="${tgUrl}" class="action-btn connect-btn"><span class="tg">📨</span> اتصال</a>
                 <button class="action-btn copy-btn">📋 کپی</button>
             </div>
         `;
@@ -148,6 +150,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSummary() {
         const total = allWorkingProxies.length;
         summaryText.textContent = `✅ تعداد ${total} پروکسی فعال پیدا شد.`;
+    }
+
+    function updateLegend() {
+        if (!pingLegend) return;
+        const good = allWorkingProxies.filter(p => p.ping <= 150).length;
+        const mid = allWorkingProxies.filter(p => p.ping > 150 && p.ping <= 500).length;
+        const bad = allWorkingProxies.filter(p => p.ping > 500).length;
+        pingLegend.innerHTML = `
+            <div class="item"><span class="dot good"></span><span>≤150 خوب: ${good}</span></div>
+            <div class="item"><span class="dot mid"></span><span>151-500 متوسط: ${mid}</span></div>
+            <div class="item"><span class="dot bad"></span><span>>500 ضعیف: ${bad}</span></div>
+        `;
     }
 
     function showLoader(isLoading) {

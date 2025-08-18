@@ -122,6 +122,12 @@ header h1 {
     gap: 15px;
 }
 #summary-text { color: var(--text-secondary); }
+.legend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.legend .item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--text-secondary); }
+.legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend .dot.good { background: #29b345; }
+.legend .dot.mid { background: #f0ad4e; }
+.legend .dot.bad { background: #dc3545; }
 .controls select {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -176,6 +182,7 @@ header h1 {
 .action-btn { flex-grow: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.2s ease; }
 .connect-btn { background: linear-gradient(45deg, var(--green-color), #29b345); color: white; box-shadow: 0 4px 10px rgba(49, 162, 76, 0.3); }
 .connect-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(49, 162, 76, 0.4); }
+.connect-btn .tg { margin-left: 6px; }
 .copy-btn { background: linear-gradient(45deg, var(--blue-color), var(--purple-color)); color: white; box-shadow: 0 4px 10px hsla(var(--primary-hue), 90%, 55%, 0.3); position: relative; }
 .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px hsla(var(--primary-hue), 90%, 55%, 0.4); }
 .copy-btn.copied { background: #6e7681; box-shadow: none; }
