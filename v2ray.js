@@ -32,11 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryText = document.getElementById('summary-text');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
     const protocolSelector = document.getElementById('protocolSelector');
-    const toggleImportBtn = document.getElementById('toggleImport');
-    const importPanel = document.getElementById('importPanel');
-    const importTextarea = document.getElementById('importTextarea');
-    const applyImportBtn = document.getElementById('applyImport');
-    const clearImportBtn = document.getElementById('clearImport');
+    // Removed manual import elements
 
     const endpoints = {
         all: 'https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/all_extracted_configs.txt',
@@ -309,33 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initialize();
     });
 
-    // Manual import handlers
-    if (toggleImportBtn) {
-        toggleImportBtn.addEventListener('click', () => {
-            const isHidden = importPanel.hasAttribute('hidden');
-            if (isHidden) {
-                importPanel.removeAttribute('hidden');
-            } else {
-                importPanel.setAttribute('hidden', '');
-            }
-        });
-    }
-    if (applyImportBtn) {
-        applyImportBtn.addEventListener('click', () => {
-            const text = (importTextarea.value || '').split('\n').map(l => l.trim()).filter(Boolean);
-            if (text.length === 0) return;
-            // Merge with current list in memory when protocol is "all"
-            allConfigs = text.concat(allConfigs || []);
-            filterByProtocol();
-            updateSummary();
-            renderConfigs();
-        });
-    }
-    if (clearImportBtn) {
-        clearImportBtn.addEventListener('click', () => {
-            importTextarea.value = '';
-        });
-    }
+    // Manual import feature removed per requirements
 
     // First load
     initialize();
