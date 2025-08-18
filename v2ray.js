@@ -47,6 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedProtocol = 'all';
     let itemsPerPage = 10;
 
+    // Fetch with CORS fallback
+    async function fetchTextWithCors(url) {
+        const bust = `${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
+        try {
+            const r = await fetch(bust);
+            if (r.ok) return await r.text();
+            throw new Error('direct fetch not ok');
+        } catch (e) {
+            try {
+                const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(bust)}`;
+                const pr = await fetch(proxied);
+                if (!pr.ok) throw new Error('proxy fetch not ok');
+                return await pr.text();
+            } catch (e2) {
+                throw e2;
+            }
+        }
+    }
+
     // Initialize
     async function initialize() {
         showLoader(true);
@@ -56,9 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Fetch chosen protocol list; for 'all' use the "all" file for performance
             const url = endpoints[selectedProtocol];
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Network error');
-            const data = await response.text();
+            const data = await fetchTextWithCors(url);
 
             // Split by lines, trim empty
             allConfigs = data.split('\n').map(l => l.trim()).filter(Boolean);
@@ -76,8 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterByProtocol() {
+        const lowerStarts = (line, scheme) => line.toLowerCase().startsWith(`${scheme}://`);
         if (selectedProtocol === 'all') {
-            filteredConfigs = allConfigs;
+            filteredConfigs = allConfigs.filter(line => (
+                lowerStarts(line, 'vmess') || lowerStarts(line, 'vless') || lowerStarts(line, 'trojan') || lowerStarts(line, 'ss')
+            ));
             return;
         }
         const schema = selectedProtocol + '://';
