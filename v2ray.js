@@ -266,18 +266,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const start = Date.now();
             const target = `http://${host}:${port}`;
             const proxied = `https://api.allorigins.win/get?url=${encodeURIComponent(target)}`;
-            await fetchWithTimeout(proxied, { method: 'GET', cache: 'no-store' }, 5000);
+            await fetch(proxied, { method: 'GET', cache: 'no-store' });
             return Date.now() - start;
         } catch (e) {
             return null;
         }
-    }
-
-    function fetchWithTimeout(url, options = {}, timeoutMs = 10000) {
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort('timeout'), timeoutMs);
-        return fetch(url, { ...options, signal: controller.signal })
-            .finally(() => clearTimeout(id));
     }
 
     // Events
