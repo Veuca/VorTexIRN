@@ -35,7 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const pingLegend = document.getElementById('ping-legend');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
 
-    const apiUrl = `https://raw.githubusercontent.com/SoliSpirit/mtproto/master/all_proxies.txt?_=${new Date().getTime()}`;
+    const apiUrl = `https://raw.githubusercontent.com/SoliSpirit/mtproto/master/all_proxies.txt`;
+
+    // --- Network Tunables ---
+    const PING_CONCURRENCY = 10;
+    const PING_TIMEOUT_MS = 5000;
+    let currentRunId = 0;
 
     // --- State Management ---
     let allWorkingProxies = [];
@@ -43,33 +48,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Main Function to Fetch and Process Proxies ---
     async function initialize() {
+        const myRunId = ++currentRunId;
         showLoader(true);
         summaryText.textContent = 'درحال دریافت لیست پروکسی‌ها...';
         proxyListContainer.innerHTML = '';
 
         try {
-            const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error('Network error');
-            const data = await response.text();
-            
-            const allProxyUrls = data.trim().split('\n').filter(line => line.startsWith('https://t.me/proxy?'));
-            
-            summaryText.textContent = `درحال بررسی ${allProxyUrls.length} پروکسی...`;
+            const data = await fetchTextWithCors(apiUrl);
+            const allProxyUrls = data
+                .trim()
+                .split('\n')
+                .map(l => l.trim())
+                .filter(Boolean)
+                .filter(line => line.startsWith('https://t.me/proxy?'));
 
-            const pingPromises = allProxyUrls.map(checkProxy);
-            const results = await Promise.all(pingPromises);
-            
-            allWorkingProxies = results.filter(p => p !== null);
+            if (myRunId !== currentRunId) return; // cancelled by another refresh
 
+            // Shuffle a bit to surface fast results sooner
+            shuffleArrayInPlace(allProxyUrls);
+
+            allWorkingProxies = [];
             itemsPerPage = itemsPerPageSelect.value === 'all' ? 'all' : parseInt(itemsPerPageSelect.value);
+            summaryText.textContent = `درحال بررسی ${allProxyUrls.length} پروکسی...`;
             updateSummary();
             updateLegend();
             renderProxies();
 
+            // Process pings with concurrency limit and progressive rendering
+            processProxies(allProxyUrls, myRunId).catch(() => {});
+
         } catch (error) {
             console.error('Error:', error);
             summaryText.textContent = 'خطا در دریافت لیست پروکسی‌ها.';
-        } finally {
             showLoader(false);
         }
     }
@@ -78,9 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderProxies() {
         proxyListContainer.innerHTML = '';
         const proxiesToRender = itemsPerPage === 'all' ? allWorkingProxies : allWorkingProxies.slice(0, itemsPerPage);
+        const isLoading = loader && loader.style.display !== 'none';
         
         if (proxiesToRender.length === 0) {
-            proxyListContainer.innerHTML = '<p>پروکسی فعالی یافت نشد.</p>';
+            if (!isLoading) {
+                proxyListContainer.innerHTML = '<p>پروکسی فعالی یافت نشد.</p>';
+            }
             return;
         }
 
@@ -150,14 +163,86 @@ document.addEventListener('DOMContentLoaded', () => {
             const port = urlParams.get('port');
             const corsProxy = 'https://api.allorigins.win/get?url=';
             const startTime = Date.now();
-            
-            await fetch(`${corsProxy}http://${server}:${port}`, { mode: 'cors' });
-            
+
+            await fetchWithTimeout(`${corsProxy}http://${server}:${port}`, { method: 'GET', cache: 'no-store' }, PING_TIMEOUT_MS);
+
             const ping = Date.now() - startTime;
             return { url, server, port, ping };
         } catch (error) {
             return null;
         }
+    }
+
+    // --- Concurrency-limited processing with progressive rendering ---
+    async function processProxies(urls, myRunId) {
+        let completed = 0;
+        let firstRendered = false;
+        const total = urls.length;
+        const updateEvery = 5;
+        let cursor = 0;
+
+        async function runOne() {
+            const idx = cursor++;
+            if (idx >= total) return;
+            const res = await checkProxy(urls[idx]);
+            completed++;
+            if (myRunId !== currentRunId) return; // cancelled
+            if (res) {
+                allWorkingProxies.push(res);
+                if (!firstRendered) {
+                    // First success -> hide loader and render immediately
+                    firstRendered = true;
+                    updateSummary();
+                    updateLegend();
+                    renderProxies();
+                    showLoader(false);
+                } else if (completed % updateEvery === 0) {
+                    updateSummary();
+                    updateLegend();
+                    renderProxies();
+                }
+            }
+            return runOne();
+        }
+
+        const workers = Array.from({ length: Math.min(PING_CONCURRENCY, total) }, () => runOne());
+        await Promise.all(workers);
+        if (myRunId !== currentRunId) return;
+        // Final render if we never rendered or if remaining not flushed
+        updateSummary();
+        updateLegend();
+        renderProxies();
+        showLoader(false);
+    }
+
+    // --- Fetch helpers ---
+    async function fetchTextWithCors(url) {
+        const bust = `${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
+        try {
+            const r = await fetch(bust);
+            if (r.ok) return await r.text();
+            throw new Error('direct fetch not ok');
+        } catch (e) {
+            const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(bust)}`;
+            const pr = await fetch(proxied);
+            if (!pr.ok) throw new Error('proxy fetch not ok');
+            return await pr.text();
+        }
+    }
+
+    function fetchWithTimeout(url, options = {}, timeoutMs = 10000) {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort('timeout'), timeoutMs);
+        return fetch(url, { ...options, signal: controller.signal })
+            .finally(() => clearTimeout(id));
+    }
+
+    function shuffleArrayInPlace(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
     }
 
     function updateSummary() {
