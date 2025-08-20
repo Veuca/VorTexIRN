@@ -362,11 +362,12 @@ header h1 {
 .sub-link-label { color: #ffd166; font-weight: 900; }
 .sub-link-value { font-family: monospace; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; flex: 1; }
 
-.table-wrap { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; }
+.table-wrap { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 24px var(--shadow-color); }
 .data-table { width: 100%; border-collapse: collapse; }
-.data-table thead th { text-align: right; font-weight: 800; color: var(--text-secondary); background: rgba(0,0,0,0.02); padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
+.data-table thead th { text-align: right; font-weight: 900; color: var(--text-secondary); background: linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0)); padding: 14px 16px; border-bottom: 1px solid var(--border-color); letter-spacing: 0.2px; }
 .data-table tbody td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
-.data-table tbody tr:hover { background: rgba(0,0,0,0.03); }
+.data-table tbody tr { transition: background 0.2s ease, transform 0.2s ease; }
+.data-table tbody tr:hover { background: rgba(0,0,0,0.03); transform: translateY(-1px); }
 .col-actions { text-align: left; }
 .copy-link { color: #6c63ff; font-weight: 800; cursor: pointer; text-decoration: none; }
 .copy-link:hover { text-decoration: underline; }
@@ -388,11 +389,11 @@ header h1 {
 header h1#table-title { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
 
 /* Responsive for table */
-@media (max-width: 600px) {
+@media (max-width: 720px) {
     .data-table thead { display: none; }
     .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
-    .data-table tr { border-bottom: 1px solid var(--border-color); }
-    .data-table td { padding: 10px 14px; }
+    .data-table tr { border-bottom: 1px solid var(--border-color); background: var(--card-bg); }
+    .data-table td { padding: 12px 16px; }
     .data-table td::before { content: attr(data-label); display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
     .col-actions { text-align: right; }
 }

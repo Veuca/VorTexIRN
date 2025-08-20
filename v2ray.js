@@ -246,6 +246,10 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.style.display = isLoading ? 'block' : 'none';
         const overlay = document.getElementById('page-preloader');
         if (overlay) overlay.style.display = isLoading ? 'flex' : 'none';
+        if (!isLoading) {
+            const appPre = document.getElementById('app-preloader');
+            if (appPre) appPre.classList.add('hidden');
+        }
     }
 
     // Parse host/port from various config schemes
