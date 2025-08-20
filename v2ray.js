@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (pageRocket) {
                     pageRocket.style.animation = 'none';
                     setTimeout(() => {
-                        pageRocket.style.animation = 'rocketFly 2.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+                        pageRocket.style.animation = 'rocketFly 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
                     }, 10);
                 }
             }

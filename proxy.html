@@ -81,7 +81,7 @@
           if (preloader) preloader.classList.add('hidden');
         }
         // Start a fallback timer to guarantee reveal (in case animation event is missed)
-        var fallbackTimer = setTimeout(revealPage, 3000);
+        var fallbackTimer = setTimeout(revealPage, 1000);
         // Prefer revealing exactly when rocket exits the screen
         document.addEventListener('animationend', function(e){
           if (e && e.target && e.target.id === 'rocket') {
