@@ -343,3 +343,47 @@ header h1 {
 /* V2Ray specific small adjustments */
 .config-card .config-meta { flex-wrap: wrap; }
 .config-card .config-meta .ping-badge { margin-inline-start: 4px; }
+
+/* --- Table-like layout (for both V2Ray and Proxy pages) --- */
+.count-badge { font-size: 16px; font-weight: 800; color: var(--text-secondary); }
+.icon-btn { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 6px 10px; cursor: pointer; box-shadow: 0 4px 10px var(--shadow-color); }
+.icon-btn:hover { filter: brightness(1.05); }
+
+.sub-link-bar { display:flex; align-items:center; gap:10px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 14px; margin-bottom: 18px; }
+.sub-link-label { color: #ffd166; font-weight: 900; }
+.sub-link-value { font-family: monospace; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; flex: 1; }
+
+.table-wrap { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead th { text-align: right; font-weight: 800; color: var(--text-secondary); background: rgba(0,0,0,0.02); padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
+.data-table tbody td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
+.data-table tbody tr:hover { background: rgba(0,0,0,0.03); }
+.col-actions { text-align: left; }
+.copy-link { color: #6c63ff; font-weight: 800; cursor: pointer; text-decoration: none; }
+.copy-link:hover { text-decoration: underline; }
+.status-dot { display:inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-start: 6px; }
+.status-good { color: #29b345; }
+.status-mid { color: #f0ad4e; }
+.status-bad { color: #dc3545; }
+.status-na { color: var(--text-secondary); }
+.status-good .status-dot { background:#29b345; }
+.status-mid .status-dot { background:#f0ad4e; }
+.status-bad .status-dot { background:#dc3545; }
+.status-na .status-dot { background:var(--border-color); }
+
+.show-all { display:flex; justify-content:center; margin-top:10px; }
+.show-all-btn { background: transparent; border: none; color: #7c4dff; font-weight: 800; cursor: pointer; padding: 10px; }
+.show-all-btn:hover { text-decoration: underline; }
+
+/* make header h1 tighter for this page */
+header h1#table-title { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+
+/* Responsive for table */
+@media (max-width: 600px) {
+    .data-table thead { display: none; }
+    .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
+    .data-table tr { border-bottom: 1px solid var(--border-color); }
+    .data-table td { padding: 10px 14px; }
+    .data-table td::before { content: attr(data-label); display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+    .col-actions { text-align: right; }
+}

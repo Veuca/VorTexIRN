@@ -29,11 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Element Selectors ---
     const refreshButton = document.getElementById('refreshBtn');
+    const titleRefresh = document.getElementById('title-refresh');
     const proxyListContainer = document.getElementById('proxy-list-container');
     const loader = document.getElementById('loader');
     const summaryText = document.getElementById('summary-text');
     const pingLegend = document.getElementById('ping-legend');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
+    const subLinkEl = document.getElementById('sub-link');
+    const copySubBtn = document.getElementById('copy-sub');
+    const totalCountEl = document.getElementById('total-count');
+    const showAllBtn = document.getElementById('show-all');
 
     const apiUrl = `https://raw.githubusercontent.com/SoliSpirit/mtproto/master/all_proxies.txt?_=${new Date().getTime()}`;
 
@@ -76,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Rendering Functions ---
     function renderProxies() {
-        proxyListContainer.innerHTML = '';
         const proxiesToRender = itemsPerPage === 'all' ? allWorkingProxies : allWorkingProxies.slice(0, itemsPerPage);
         
         if (proxiesToRender.length === 0) {
@@ -84,10 +88,44 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const table = document.createElement('table');
+        table.className = 'data-table';
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>سرور</th>
+                    <th>پورت</th>
+                    <th>پینگ</th>
+                    <th class="col-actions">عملیات</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+        const tbody = table.querySelector('tbody');
         proxiesToRender.forEach((proxyData, index) => {
-            const card = createProxyCard(proxyData, index + 1);
-            proxyListContainer.appendChild(card);
+            const { url, server, port, ping } = proxyData;
+            const tgUrl = url.replace('https://t.me/', 'tg://');
+            const pingClass = ping <= 150 ? 'status-good' : ping <= 400 ? 'status-mid' : 'status-bad';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td data-label="#">${index + 1}</td>
+                <td data-label="سرور">${server}</td>
+                <td data-label="پورت">${port}</td>
+                <td data-label="پینگ" class="${pingClass}"><span class="status-dot"></span>${ping}ms</td>
+                <td data-label="عملیات" class="col-actions"><a href="#" class="copy-link">Copy</a> <a href="${tgUrl}" class="copy-link">Open</a></td>
+            `;
+            const copyLink = row.querySelector('.copy-link');
+            copyLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(tgUrl);
+                copyLink.textContent = 'Copied';
+                setTimeout(() => copyLink.textContent = 'Copy', 1200);
+            });
+            tbody.appendChild(row);
         });
+        proxyListContainer.innerHTML = '';
+        proxyListContainer.appendChild(table);
     }
 
     function createProxyCard(proxyData, number) {
@@ -163,6 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSummary() {
         const total = allWorkingProxies.length;
         summaryText.textContent = `✅ تعداد ${total} پروکسی فعال پیدا شد.`;
+        if (totalCountEl) totalCountEl.textContent = `(${total})`;
+        if (subLinkEl) subLinkEl.textContent = apiUrl.replace(/^https?:\/\//, '.../');
     }
 
     function updateLegend() {
@@ -183,8 +223,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     refreshButton.addEventListener('click', initialize);
+    if (titleRefresh) titleRefresh.addEventListener('click', initialize);
+    if (copySubBtn) copySubBtn.addEventListener('click', () => {
+        const full = apiUrl;
+        navigator.clipboard.writeText(full);
+        copySubBtn.textContent = 'کپی شد';
+        setTimeout(() => copySubBtn.textContent = 'کپی', 1200);
+    });
     itemsPerPageSelect.addEventListener('change', (e) => {
         itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
+        renderProxies();
+    });
+    if (showAllBtn) showAllBtn.addEventListener('click', () => {
+        itemsPerPageSelect.value = 'all';
+        itemsPerPage = 'all';
         renderProxies();
     });
 

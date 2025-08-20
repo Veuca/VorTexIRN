@@ -27,10 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Elements
     const refreshButton = document.getElementById('refreshBtn');
+    const titleRefresh = document.getElementById('title-refresh');
     const configListContainer = document.getElementById('config-list-container');
     const loader = document.getElementById('loader');
     const summaryText = document.getElementById('summary-text');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
+    const subLinkEl = document.getElementById('sub-link');
+    const copySubBtn = document.getElementById('copy-sub');
+    const totalCountEl = document.getElementById('total-count');
+    const showAllBtn = document.getElementById('show-all');
     // Protocol selector removed
     // Removed manual import elements
 
@@ -88,16 +93,64 @@ document.addEventListener('DOMContentLoaded', () => {
     // Removed protocol filtering; we use a unified list
 
     function renderConfigs() {
-        configListContainer.innerHTML = '';
         const list = itemsPerPage === 'all' ? allConfigs : allConfigs.slice(0, itemsPerPage);
         if (list.length === 0) {
             configListContainer.innerHTML = '<p>کانفیگی یافت نشد.</p>';
             return;
         }
+        const table = document.createElement('table');
+        table.className = 'data-table';
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>پروتکل</th>
+                    <th>هش کانفیگ</th>
+                    <th>وضعیت</th>
+                    <th class="col-actions">عملیات</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+        const tbody = table.querySelector('tbody');
         list.forEach((cfg, idx) => {
-            const card = createConfigCard(cfg, idx + 1);
-            configListContainer.appendChild(card);
+            const type = detectType(cfg);
+            const row = document.createElement('tr');
+            const hash = computeNumericHash(cfg);
+            row.innerHTML = `
+                <td data-label="#">${idx + 1}</td>
+                <td data-label="پروتکل">${type}</td>
+                <td data-label="هش کانفیگ">${hash}</td>
+                <td data-label="وضعیت" class="status-na">—</td>
+                <td data-label="عملیات" class="col-actions"><a href="#" class="copy-link">Copy</a></td>
+            `;
+            const copyLink = row.querySelector('.copy-link');
+            copyLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(cfg);
+                copyLink.textContent = 'Copied';
+                setTimeout(() => copyLink.textContent = 'Copy', 1200);
+            });
+
+            // Async ping
+            const parsed = parseServerFromConfig(cfg, type);
+            if (parsed && parsed.host && parsed.port) {
+                measurePing(parsed.host, parsed.port).then((ms) => {
+                    const td = row.cells[3];
+                    if (typeof ms === 'number') {
+                        const cls = ms <= 150 ? 'status-good' : ms <= 500 ? 'status-mid' : 'status-bad';
+                        td.className = cls;
+                        td.innerHTML = `<span class="status-dot"></span>${ms}ms`;
+                    } else {
+                        td.className = 'status-na';
+                        td.textContent = 'x';
+                    }
+                });
+            }
+            tbody.appendChild(row);
         });
+        configListContainer.innerHTML = '';
+        configListContainer.appendChild(table);
     }
 
     function createConfigCard(configLine, number) {
@@ -185,6 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateSummary() {
         summaryText.textContent = `✅ ${allConfigs.length} کانفیگ یافت شد`;
+        if (totalCountEl) totalCountEl.textContent = `(${allConfigs.length})`;
+        if (subLinkEl) subLinkEl.textContent = V2RAY_URL.replace(/^https?:\/\//, '.../');
     }
 
     function showLoader(isLoading) {
@@ -275,8 +330,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Events
     refreshButton.addEventListener('click', initialize);
+    if (titleRefresh) titleRefresh.addEventListener('click', initialize);
+    if (copySubBtn) copySubBtn.addEventListener('click', () => {
+        if (!subLinkEl) return;
+        const full = V2RAY_URL;
+        navigator.clipboard.writeText(full);
+        copySubBtn.textContent = 'کپی شد';
+        setTimeout(() => copySubBtn.textContent = 'کپی', 1200);
+    });
     itemsPerPageSelect.addEventListener('change', (e) => {
         itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
+        renderConfigs();
+    });
+    if (showAllBtn) showAllBtn.addEventListener('click', () => {
+        itemsPerPageSelect.value = 'all';
+        itemsPerPage = 'all';
         renderConfigs();
     });
     // protocol selector removed
@@ -286,4 +354,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // First load
     initialize();
 });
+
+// Small numeric hash for display
+function computeNumericHash(input) {
+    let hash = 2166136261;
+    for (let i = 0; i < input.length; i++) {
+        hash ^= input.charCodeAt(i);
+        hash = (hash * 16777619) >>> 0;
+    }
+    return (hash % 100000000).toString().padStart(8, '0');
+}
 
