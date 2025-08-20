@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خوش‌آمدید | VortexIRN</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="proxy.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="welcome-wrap">
+        <div class="welcome-card">
+            <div class="vortex-spinner" style="margin:0 auto 14px auto;">
+                <div class="ring"></div>
+                <div class="ring r2"></div>
+                <div class="ring r3"></div>
+            </div>
+            <h1 class="welcome-title">به VortexIRN خوش آمدید</h1>
+            <p class="welcome-sub">اینجا می‌توانید فهرست پروکسی‌های تلگرام و کانفیگ‌های V2Ray را با طراحی جدید مشاهده کنید.</p>
+            <div class="welcome-actions">
+                <a class="btn-primary" id="startBtn" href="index.html">شروع</a>
+                <a class="btn-ghost" href="proxy.html">پروکسی‌ها</a>
+                <a class="btn-ghost" href="v2ray.html">کانفیگ‌ها</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function(){
+            try {
+                localStorage.setItem('seenWelcome', '1');
+            } catch(e) {}
+        })();
+    </script>
+</body>
+</html>
+
