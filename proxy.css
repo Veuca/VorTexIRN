@@ -404,7 +404,147 @@ header h1 {
 /* make header h1 tighter for this page */
 header h1#table-title { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
 
-/* Responsive for table */
+/* Card Grid Layout */
+.proxy-cards-grid, .config-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.proxy-card, .config-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 20px var(--shadow-color);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.proxy-card:hover, .config-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px var(--shadow-color);
+    border-color: rgba(124, 77, 255, 0.3);
+}
+
+.card-main {
+    margin-bottom: 16px;
+}
+
+.proxy-title, .config-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.proxy-stats, .config-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.stat-item span {
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.card-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.action-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    flex: 1;
+    text-align: center;
+}
+
+.connect-btn {
+    background: linear-gradient(45deg, #7c4dff, #4db8ff);
+    color: white;
+}
+
+.connect-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+}
+
+.copy-btn {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.copy-btn:hover {
+    background: rgba(124, 77, 255, 0.1);
+    border-color: #7c4dff;
+}
+
+.copy-btn.copied {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.ping-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+}
+
+.ping-good { background: #28a745; }
+.ping-mid { background: #ffc107; color: #000; }
+.ping-bad { background: #dc3545; }
+
+.tg-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 6px;
+}
+
+/* Responsive for cards */
+@media (max-width: 720px) {
+    .proxy-cards-grid, .config-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .card-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .action-btn {
+        padding: 12px 16px;
+    }
+}
+
+/* Legacy table styles for fallback */
 @media (max-width: 720px) {
     .data-table thead { display: none; }
     .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
