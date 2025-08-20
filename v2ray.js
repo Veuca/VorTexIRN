@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme switcher parity with proxy.js
+    // Theme Switcher Logic
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
+
     const applySavedTheme = () => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             themeToggle.checked = false;
         }
     };
+
     if (themeToggle) {
         themeToggle.addEventListener('change', () => {
             if (themeToggle.checked) {
@@ -27,16 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Elements
     const refreshButton = document.getElementById('refreshBtn');
-    const titleRefresh = document.getElementById('title-refresh');
     const configListContainer = document.getElementById('config-list-container');
     const loader = document.getElementById('loader');
     const summaryText = document.getElementById('summary-text');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
-
     const totalCountEl = document.getElementById('total-count');
     const showAllBtn = document.getElementById('show-all');
-    // Protocol selector removed
-    // Removed manual import elements
 
     const V2RAY_URL = 'https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/v2ray/all_sub.txt';
 
@@ -72,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const data = await fetchTextWithCors(V2RAY_URL);
 
-            // Split by lines, trim empty and keep only known schemes
             allConfigs = data.split('\n')
                 .map(l => l.trim())
                 .filter(Boolean)
@@ -89,88 +86,112 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Removed protocol filtering; we use a unified list
-
     function renderConfigs() {
         const list = itemsPerPage === 'all' ? allConfigs : allConfigs.slice(0, itemsPerPage);
+        
         if (list.length === 0) {
-            configListContainer.innerHTML = '<p>کانفیگی یافت نشد.</p>';
+            configListContainer.innerHTML = `
+                <div class="empty-state">
+                    <h3>🔍 کانفیگی یافت نشد</h3>
+                    <p>لطفاً چند دقیقه دیگر تلاش کنید یا صفحه را بروزرسانی کنید.</p>
+                </div>
+            `;
             return;
         }
         
-        const cardContainer = document.createElement('div');
-        cardContainer.className = 'config-cards-grid';
+        configListContainer.innerHTML = '';
+        configListContainer.className = 'config-container';
         
         list.forEach((cfg, idx) => {
             const card = createConfigCard(cfg, idx + 1);
-            cardContainer.appendChild(card);
+            card.classList.add('fade-in');
+            card.style.animationDelay = `${idx * 0.05}s`;
+            configListContainer.appendChild(card);
         });
-        
-        configListContainer.innerHTML = '';
-        configListContainer.appendChild(cardContainer);
     }
 
     function createConfigCard(configLine, number) {
         const type = detectType(configLine);
-        const title = `${type.toUpperCase()} #${number}`;
-        const copyLabel = 'کپی کانفیگ';
-
+        const hash = computeNumericHash(configLine);
+        
         const card = document.createElement('div');
-        card.className = 'proxy-card config-card';
+        card.className = 'config-card';
+
         card.innerHTML = `
-            <div class="card-main">
-                <div>
-                    <div class="config-title">${title}</div>
-                    <div class="config-meta">
-                        <span class="config-type">پروتکل: <span class="pill ${type}">${type}</span></span>
-                        <span>طول: ${configLine.length}</span>
-                        <span class="host-field" hidden>سرور: <strong class="host-val"></strong></span>
-                        <span class="port-field" hidden>پورت: <strong class="port-val"></strong></span>
-                        <span class="ping-field" hidden>پینگ: <span class="ping-badge">—</span></span>
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-number">${number}</div>
+                    <span>کانفیگ ${type.toUpperCase()}</span>
+                </div>
+                <div class="protocol-badge ${type}">${type}</div>
+            </div>
+            
+            <div class="card-body">
+                <div class="card-info">
+                    <div class="info-item">
+                        <span class="info-label">پروتکل</span>
+                        <span class="info-value">${type.toUpperCase()}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">هش کانفیگ</span>
+                        <span class="info-value">#${hash.slice(-6)}</span>
+                    </div>
+                    <div class="info-item ping-item">
+                        <span class="info-label">پینگ</span>
+                        <div class="ping-status">
+                            <span class="ping-dot" id="ping-dot-${number}"></span>
+                            <span class="info-value" id="ping-value-${number}">بررسی...</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">وضعیت</span>
+                        <span class="info-value" id="status-${number}">در حال بررسی...</span>
                     </div>
                 </div>
             </div>
+            
             <div class="card-footer">
-                <a class="action-btn connect-btn" href="${buildClientUrl(type, configLine)}" target="_blank">باز کردن در کلاینت</a>
-                <button class="action-btn copy-btn">📋 ${copyLabel}</button>
+                <a class="action-btn primary-btn" href="${buildClientUrl(type, configLine)}" target="_blank">
+                    🚀 باز کردن در کلاینت
+                </a>
+                <button class="action-btn secondary-btn copy-btn">
+                    📋 کپی کانفیگ
+                </button>
             </div>
         `;
 
-        card.querySelector('.copy-btn').addEventListener('click', (e) => {
+        // Copy functionality
+        const copyBtn = card.querySelector('.copy-btn');
+        copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(configLine).then(() => {
-                const btn = e.target;
-                btn.textContent = 'کپی شد!';
-                btn.classList.add('copied');
+                copyBtn.textContent = '✅ کپی شد!';
+                copyBtn.classList.add('copied');
                 setTimeout(() => {
-                    btn.textContent = `📋 ${copyLabel}`;
-                    btn.classList.remove('copied');
-                }, 1500);
+                    copyBtn.textContent = '📋 کپی کانفیگ';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
             });
         });
 
-        // Try to parse server and measure ping
+        // Async ping check
         const parsed = parseServerFromConfig(configLine, type);
         if (parsed && parsed.host && parsed.port) {
-            const hostField = card.querySelector('.host-field');
-            const portField = card.querySelector('.port-field');
-            const pingField = card.querySelector('.ping-field');
-            const hostVal = card.querySelector('.host-val');
-            const portVal = card.querySelector('.port-val');
-            hostVal.textContent = parsed.host;
-            portVal.textContent = parsed.port;
-            hostField.removeAttribute('hidden');
-            portField.removeAttribute('hidden');
-            pingField.removeAttribute('hidden');
-
             measurePing(parsed.host, parsed.port).then((pingMs) => {
-                const pingBadge = card.querySelector('.ping-badge');
+                const pingDot = document.getElementById(`ping-dot-${number}`);
+                const pingValue = document.getElementById(`ping-value-${number}`);
+                const statusEl = document.getElementById(`status-${number}`);
+                
                 if (typeof pingMs === 'number') {
-                    const cls = pingMs <= 150 ? 'ping-good' : pingMs <= 500 ? 'ping-mid' : 'ping-bad';
-                    pingBadge.textContent = `${pingMs}ms`;
-                    pingBadge.classList.add(cls);
-                    card.classList.add(cls);
+                    const pingClass = pingMs <= 150 ? 'good' : pingMs <= 500 ? 'mid' : 'bad';
+                    const statusText = pingMs <= 150 ? 'عالی' : pingMs <= 500 ? 'متوسط' : 'ضعیف';
+                    
+                    pingDot.className = `ping-dot ${pingClass}`;
+                    pingValue.textContent = `${pingMs}ms`;
+                    statusEl.textContent = statusText;
+                    card.classList.add(`ping-${pingClass}`);
                 } else {
-                    pingBadge.textContent = 'نامشخص';
+                    pingValue.textContent = 'نامشخص';
+                    statusEl.textContent = 'غیرفعال';
                 }
             });
         }
@@ -188,8 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function buildClientUrl(type, line) {
-        // Open in v2ray, nekoray or other clients if they register URL schemes.
-        // Otherwise, use the same line to let OS/Browser handle.
         return line;
     }
 
@@ -202,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.style.display = isLoading ? 'block' : 'none';
     }
 
-    // Parse host/port from various config schemes
+    // Parse server info (simplified version)
     function parseServerFromConfig(line, type) {
         try {
             if (type === 'vmess') {
@@ -214,48 +233,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     return { host: obj.add, port: String(obj.port) };
                 }
             } else if (type === 'vless' || type === 'trojan') {
-                // Some browsers may not parse custom schemes; fallback manual
-                let host = '';
-                let port = '';
                 try {
                     const urlObj = new URL(line);
-                    host = urlObj.hostname;
-                    port = urlObj.port;
+                    return { host: urlObj.hostname, port: urlObj.port || '443' };
                 } catch (_) {
                     const withoutScheme = line.replace(/^\w+:\/\//, '');
                     const afterAt = withoutScheme.split('@').pop();
                     const hostPort = (afterAt || '').split('?')[0];
                     const parts = hostPort.split(':');
-                    host = parts[0] || '';
-                    port = parts[1] || '';
-                }
-                return { host, port: port || '443' };
-            } else if (type === 'ss') {
-                // ss://[base64(method:password@host:port)] or ss://method:password@host:port#tag
-                const raw = line.slice('ss://'.length);
-                if (raw.includes('@')) {
-                    let tmp;
-                    try {
-                        tmp = new URL(line.replace('ss://', 'http://'));
-                    } catch (_) {
-                        // manual fallback
-                        const withoutScheme = raw;
-                        const afterAt = withoutScheme.split('@').pop();
-                        const hostPort = (afterAt || '').split('#')[0].split('?')[0];
-                        const hp = hostPort.split(':');
-                        return { host: hp[0] || '', port: hp[1] || '443' };
-                    }
-                    return { host: tmp.hostname, port: tmp.port || '443' };
-                } else {
-                    const b64 = raw.split('#')[0];
-                    const normalized = normalizeBase64(b64);
-                    const decoded = atob(normalized);
-                    const atIndex = decoded.lastIndexOf('@');
-                    if (atIndex !== -1) {
-                        const hostPort = decoded.substring(atIndex + 1);
-                        const [host, port] = hostPort.split(':');
-                        if (host && port) return { host, port };
-                    }
+                    return { host: parts[0] || '', port: parts[1] || '443' };
                 }
             }
         } catch (e) {
@@ -284,26 +270,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Events
     refreshButton.addEventListener('click', initialize);
-    if (titleRefresh) titleRefresh.addEventListener('click', initialize);
-
+    
     itemsPerPageSelect.addEventListener('change', (e) => {
         itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
         renderConfigs();
     });
-    if (showAllBtn) showAllBtn.addEventListener('click', () => {
-        itemsPerPageSelect.value = 'all';
-        itemsPerPage = 'all';
-        renderConfigs();
-    });
-    // protocol selector removed
-
-    // Manual import feature removed per requirements
+    
+    if (showAllBtn) {
+        showAllBtn.addEventListener('click', () => {
+            itemsPerPageSelect.value = 'all';
+            itemsPerPage = 'all';
+            renderConfigs();
+        });
+    }
 
     // First load
     initialize();
 });
 
-// Small numeric hash for display
+// Utility function for hash
 function computeNumericHash(input) {
     let hash = 2166136261;
     for (let i = 0; i < input.length; i++) {
@@ -312,4 +297,3 @@ function computeNumericHash(input) {
     }
     return (hash % 100000000).toString().padStart(8, '0');
 }
-

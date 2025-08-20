@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- START: Theme Switcher Logic ---
+    // Theme Switcher Logic
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
@@ -25,27 +25,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     applySavedTheme();
-    // --- END: Theme Switcher Logic ---
 
-    // --- Element Selectors ---
+    // Element Selectors
     const refreshButton = document.getElementById('refreshBtn');
-    const titleRefresh = document.getElementById('title-refresh');
     const proxyListContainer = document.getElementById('proxy-list-container');
     const loader = document.getElementById('loader');
     const summaryText = document.getElementById('summary-text');
     const pingLegend = document.getElementById('ping-legend');
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
-
     const totalCountEl = document.getElementById('total-count');
     const showAllBtn = document.getElementById('show-all');
 
     const apiUrl = `https://raw.githubusercontent.com/SoliSpirit/mtproto/master/all_proxies.txt?_=${new Date().getTime()}`;
 
-    // --- State Management ---
+    // State Management
     let allWorkingProxies = [];
     let itemsPerPage = 10;
 
-    // --- Main Function to Fetch and Process Proxies ---
+    // Main Function
     async function initialize() {
         showLoader(true);
         summaryText.textContent = 'درحال دریافت لیست پروکسی‌ها...';
@@ -78,80 +75,101 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Rendering Functions ---
+    // Rendering Functions
     function renderProxies() {
         const proxiesToRender = itemsPerPage === 'all' ? allWorkingProxies : allWorkingProxies.slice(0, itemsPerPage);
         
         if (proxiesToRender.length === 0) {
-            proxyListContainer.innerHTML = '<p>پروکسی فعالی یافت نشد.</p>';
+            proxyListContainer.innerHTML = `
+                <div class="empty-state">
+                    <h3>🔍 پروکسی فعالی یافت نشد</h3>
+                    <p>لطفاً چند دقیقه دیگر تلاش کنید یا صفحه را بروزرسانی کنید.</p>
+                </div>
+            `;
             return;
         }
 
-        const cardContainer = document.createElement('div');
-        cardContainer.className = 'proxy-cards-grid';
+        proxyListContainer.innerHTML = '';
+        proxyListContainer.className = 'proxy-container';
         
         proxiesToRender.forEach((proxyData, index) => {
             const card = createProxyCard(proxyData, index + 1);
-            cardContainer.appendChild(card);
+            card.classList.add('fade-in');
+            card.style.animationDelay = `${index * 0.1}s`;
+            proxyListContainer.appendChild(card);
         });
-        
-        proxyListContainer.innerHTML = '';
-        proxyListContainer.appendChild(cardContainer);
     }
 
     function createProxyCard(proxyData, number) {
-        const { url, port, ping } = proxyData;
+        const { url, server, port, ping } = proxyData;
         const tgUrl = url.replace('https://t.me/', 'tg://');
         
         const card = document.createElement('div');
-        const pingClass = ping <= 150 ? 'ping-good' : ping <= 400 ? 'ping-mid' : 'ping-bad';
-        card.className = `proxy-card ${pingClass}`;
+        card.className = 'proxy-card';
 
-        const pingLabel = ping <= 150 ? 'خوبه' : ping <= 400 ? 'متوسط' : 'ضعیف';
+        const pingClass = ping <= 150 ? 'good' : ping <= 400 ? 'mid' : 'bad';
+        const pingLabel = ping <= 150 ? 'عالی' : ping <= 400 ? 'متوسط' : 'ضعیف';
 
-        const telegramIcon = `
-            <svg class="tg-svg" viewBox="0 0 240 240" width="18" height="18" aria-hidden="true" focusable="false">
-                <defs>
-                    <linearGradient id="tgGradient" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#37aee2"></stop>
-                        <stop offset="100%" stop-color="#1e96c8"></stop>
-                    </linearGradient>
-                </defs>
-                <circle cx="120" cy="120" r="120" fill="url(#tgGradient)" />
-                <path fill="#c8daea" d="M98 175c-4 0-4-2-6-6l-15-48 110-65"/>
-                <path fill="#a9c9dd" d="M98 175c3 0 5-1 7-3l19-18-23-14"/>
-                <path fill="#fff" d="M101 140l63 47c7 4 13 2 15-7l27-126c3-13-5-19-13-15L45 99c-12 5-12 12-2 15l39 12 90-56c4-3 7-1 4 2"/>
-            </svg>`;
         card.innerHTML = `
-            <div class="card-main">
-                <div class="proxy-title">پروکسی ${number}</div>
-                <div class="proxy-stats">
-                    <div class="stat-item">Port<span>${port}</span></div>
-                    <div class="stat-item">Ping<span><span class="ping-badge ${pingClass}">${ping}ms • ${pingLabel}</span></span></div>
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-number">${number}</div>
+                    <span>پروکسی تلگرام</span>
                 </div>
             </div>
+            
+            <div class="card-body">
+                <div class="card-info">
+                    <div class="info-item">
+                        <span class="info-label">سرور</span>
+                        <span class="info-value">${server}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">پورت</span>
+                        <span class="info-value">${port}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">پینگ</span>
+                        <div class="ping-status">
+                            <span class="ping-dot ${pingClass}"></span>
+                            <span class="info-value">${ping}ms</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">وضعیت</span>
+                        <span class="info-value">${pingLabel}</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card-footer">
-                <a href="${tgUrl}" class="action-btn connect-btn"><span class="tg-icon">${telegramIcon}</span> اتصال</a>
-                <button class="action-btn copy-btn">📋 کپی</button>
+                <a href="${tgUrl}" class="action-btn primary-btn">
+                    <span class="tg-icon">📱</span>
+                    اتصال به تلگرام
+                </a>
+                <button class="action-btn secondary-btn copy-btn">
+                    📋 کپی لینک
+                </button>
             </div>
         `;
 
-        card.querySelector('.copy-btn').addEventListener('click', (e) => {
+        // Copy functionality
+        const copyBtn = card.querySelector('.copy-btn');
+        copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(tgUrl).then(() => {
-                const btn = e.target;
-                btn.textContent = 'کپی شد!';
-                btn.classList.add('copied');
+                copyBtn.textContent = '✅ کپی شد!';
+                copyBtn.classList.add('copied');
                 setTimeout(() => {
-                    btn.textContent = '📋 کپی';
-                    btn.classList.remove('copied');
-                }, 1500);
+                    copyBtn.textContent = '📋 کپی لینک';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
             });
         });
 
         return card;
     }
 
-    // --- Utility Functions ---
+    // Utility Functions
     async function checkProxy(url) {
         try {
             const urlParams = new URLSearchParams(new URL(url).search);
@@ -171,19 +189,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateSummary() {
         const total = allWorkingProxies.length;
-        summaryText.textContent = `✅ تعداد ${total} پروکسی فعال پیدا شد.`;
+        summaryText.textContent = `✅ ${total} پروکسی فعال یافت شد`;
         if (totalCountEl) totalCountEl.textContent = `(${total})`;
     }
 
     function updateLegend() {
         if (!pingLegend) return;
         const good = allWorkingProxies.filter(p => p.ping <= 150).length;
-        const mid = allWorkingProxies.filter(p => p.ping > 150 && p.ping <= 500).length;
-        const bad = allWorkingProxies.filter(p => p.ping > 500).length;
+        const mid = allWorkingProxies.filter(p => p.ping > 150 && p.ping <= 400).length;
+        const bad = allWorkingProxies.filter(p => p.ping > 400).length;
         pingLegend.innerHTML = `
-            <div class="item"><span class="dot good"></span><span>≤150 خوب: ${good}</span></div>
-            <div class="item"><span class="dot mid"></span><span>151-500 متوسط: ${mid}</span></div>
-            <div class="item"><span class="dot bad"></span><span>>500 ضعیف: ${bad}</span></div>
+            <div class="item"><span class="dot good"></span><span>عالی (≤150ms): ${good}</span></div>
+            <div class="item"><span class="dot mid"></span><span>متوسط (151-400ms): ${mid}</span></div>
+            <div class="item"><span class="dot bad"></span><span>ضعیف (>400ms): ${bad}</span></div>
         `;
     }
 
@@ -191,20 +209,22 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.style.display = isLoading ? 'block' : 'none';
     }
 
-    // --- Event Listeners ---
+    // Event Listeners
     refreshButton.addEventListener('click', initialize);
-    if (titleRefresh) titleRefresh.addEventListener('click', initialize);
-
+    
     itemsPerPageSelect.addEventListener('change', (e) => {
         itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
         renderProxies();
     });
-    if (showAllBtn) showAllBtn.addEventListener('click', () => {
-        itemsPerPageSelect.value = 'all';
-        itemsPerPage = 'all';
-        renderProxies();
-    });
+    
+    if (showAllBtn) {
+        showAllBtn.addEventListener('click', () => {
+            itemsPerPageSelect.value = 'all';
+            itemsPerPage = 'all';
+            renderProxies();
+        });
+    }
 
-    // --- Initial Load ---
+    // Initial Load
     initialize();
 });

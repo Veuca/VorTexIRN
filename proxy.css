@@ -374,9 +374,7 @@ header h1 {
 .icon-btn { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 6px 10px; cursor: pointer; box-shadow: 0 4px 10px var(--shadow-color); }
 .icon-btn:hover { filter: brightness(1.05); }
 
-.sub-link-bar { display:flex; align-items:center; gap:10px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 14px; margin-bottom: 18px; }
-.sub-link-label { color: #ffd166; font-weight: 900; }
-.sub-link-value { font-family: monospace; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; flex: 1; }
+
 
 .table-wrap { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 24px var(--shadow-color); }
 .data-table { width: 100%; border-collapse: collapse; }
