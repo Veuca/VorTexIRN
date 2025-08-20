@@ -245,7 +245,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function showLoader(isLoading) {
         loader.style.display = isLoading ? 'block' : 'none';
         const overlay = document.getElementById('page-preloader');
-        if (overlay) overlay.style.display = isLoading ? 'flex' : 'none';
+        if (overlay) {
+            overlay.style.display = isLoading ? 'flex' : 'none';
+            if (isLoading) {
+                // Trigger rocket animation for page loading
+                const pageRocket = document.getElementById('page-rocket');
+                if (pageRocket) {
+                    pageRocket.style.animation = 'none';
+                    setTimeout(() => {
+                        pageRocket.style.animation = 'rocketFly 2.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+                    }, 10);
+                }
+            }
+        }
         if (!isLoading) {
             const appPre = document.getElementById('app-preloader');
             if (appPre) appPre.classList.add('hidden');

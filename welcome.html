@@ -3,30 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خوش‌آمدید | VortexIRN</title>
+    <title>Vortex Project</title>
     <link rel="stylesheet" href="style.css?v=2">
-    <link rel="stylesheet" href="proxy.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="welcome-hero-bg"></div>
-    <div class="welcome-wrap">
-        <div class="welcome-card">
-            <h1 class="welcome-title">خوش آمدید 👋</h1>
-            <p class="welcome-sub">به VortexIRN؛ جایی برای پروکسی‌های سریع تلگرام و کانفیگ‌های بروز V2Ray با طراحی جدید.</p>
-            <div class="welcome-actions">
-                <a class="btn-primary" href="proxy.html">مشاهده پروکسی‌ها</a>
-                <a class="btn-ghost" href="v2ray.html">مشاهده کانفیگ‌ها</a>
+<body class="home-page preloading">
+
+    <div id="app-preloader" class="app-preloader">
+        <div class="rocket-scene" aria-hidden="true">
+            <div class="stars"></div>
+            <div class="rocket" id="rocket">
+                <span class="emoji">🚀</span>
+                <span class="flame"></span>
+                <span class="trail"></span>
             </div>
         </div>
+        <div class="preloader-title">در حال پرواز...</div>
     </div>
-    <script>
-        (function(){
-            try {
-                localStorage.setItem('seenWelcome', '1');
-            } catch(e) {}
-        })();
-    </script>
+
+    <div class="main-container">
+        <header class="page-header">
+            <h1>VortexIRN</h1>
+            <div class="subtitle">پروکسی‌ و ابزارهای سریع با طراحی مدرن</div>
+        </header>
+        
+        <main class="selection-grid">
+            <a href="proxy.html" class="selection-card">
+                <span class="settings-icon">⚙️</span>
+                <div class="card-icon">🛰️</div>
+                <h2>پروکسی تلگرام</h2>
+                <p>لیست پروکسی‌های فعال و پرسرعت</p>
+            </a>
+            
+            <a href="v2ray.html" class="selection-card">
+                <div class="card-icon">⚡️</div>
+                <h2>کانفیگ V2Ray</h2>
+                <p>لیست کانفیگ‌های رایگان (VMess, VLess, Trojan, SS)</p>
+            </a>
+        </main>
+    </div>
+
+    <footer>
+        <span>ساخته شده توسط:</span>
+        <a href="https://t.me/im_pwr" target="_blank">@im_pwr</a>
+        <span> و </span>
+        <a href="https://t.me/Veuca" target="_blank">@Veuca</a>
+        <span>| اسپانسر:</span>
+        <a href="https://t.me/VorTexIRN" target="_blank">@VorTexIRN</a>
+    </footer>
+
 </body>
+<script>
+  (function(){
+    function revealPage(){
+      var preloader = document.getElementById('app-preloader');
+      document.body.classList.remove('preloading');
+      document.body.classList.add('page-enter');
+      if (preloader) preloader.classList.add('hidden');
+    }
+    // Start a fallback timer to guarantee reveal (in case animation event is missed)
+    var fallbackTimer = setTimeout(revealPage, 3000);
+    // Prefer revealing exactly when rocket exits the screen
+    document.addEventListener('animationend', function(e){
+      if (e && e.target && e.target.id === 'rocket') {
+        clearTimeout(fallbackTimer);
+        revealPage();
+      }
+    }, { passive: true });
+
+  })();
+</script>
 </html>
 

@@ -9,14 +9,15 @@
 </head>
 <body>
     <div id="app-preloader" class="app-preloader" style="display:flex; align-items:center; justify-content:center;">
-        <div class="preloader-content">
-            <div class="vortex-spinner">
-                <div class="ring"></div>
-                <div class="ring r2"></div>
-                <div class="ring r3"></div>
+        <div class="rocket-scene" aria-hidden="true">
+            <div class="stars"></div>
+            <div class="rocket" id="rocket">
+                <span class="emoji">🚀</span>
+                <span class="flame"></span>
+                <span class="trail"></span>
             </div>
-            <div class="preloader-title">در حال بارگذاری...</div>
         </div>
+        <div class="preloader-title">در حال پرواز...</div>
     </div>
     <div class="container">
         <header>
@@ -72,10 +73,23 @@
     </footer>
 
     <script>
-      window.addEventListener('load', function () {
-        var preloader = document.getElementById('app-preloader');
-        if (preloader) { preloader.classList.add('hidden'); }
-      });
+      (function(){
+        function revealPage(){
+          var preloader = document.getElementById('app-preloader');
+          document.body.classList.remove('preloading');
+          document.body.classList.add('page-enter');
+          if (preloader) preloader.classList.add('hidden');
+        }
+        // Start a fallback timer to guarantee reveal (in case animation event is missed)
+        var fallbackTimer = setTimeout(revealPage, 3000);
+        // Prefer revealing exactly when rocket exits the screen
+        document.addEventListener('animationend', function(e){
+          if (e && e.target && e.target.id === 'rocket') {
+            clearTimeout(fallbackTimer);
+            revealPage();
+          }
+        }, { passive: true });
+      })();
     </script>
 </body>
 </html>
