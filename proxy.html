@@ -8,17 +8,7 @@
   <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="proxy.css"> <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app-preloader" class="app-preloader" style="display:flex; align-items:center; justify-content:center;">
-        <div class="rocket-scene" aria-hidden="true">
-            <div class="stars"></div>
-            <div class="rocket" id="rocket">
-                <span class="emoji">🚀</span>
-                <span class="flame"></span>
-                <span class="trail"></span>
-            </div>
-        </div>
-        <div class="preloader-title">در حال پرواز...</div>
-    </div>
+
     <div class="container">
         <header>
             <h1 id="table-title">⚡️ همه پروکسی‌های تلگرام <span id="total-count" class="count-badge">(0)</span> <button id="title-refresh" class="icon-btn" aria-label="refresh">↻</button></h1>
@@ -72,24 +62,6 @@
         </div>
     </footer>
 
-    <script>
-      (function(){
-        function revealPage(){
-          var preloader = document.getElementById('app-preloader');
-          document.body.classList.remove('preloading');
-          document.body.classList.add('page-enter');
-          if (preloader) preloader.classList.add('hidden');
-        }
-        // Start a fallback timer to guarantee reveal (in case animation event is missed)
-        var fallbackTimer = setTimeout(revealPage, 1000);
-        // Prefer revealing exactly when rocket exits the screen
-        document.addEventListener('animationend', function(e){
-          if (e && e.target && e.target.id === 'rocket') {
-            clearTimeout(fallbackTimer);
-            revealPage();
-          }
-        }, { passive: true });
-      })();
-    </script>
+
 </body>
 </html>

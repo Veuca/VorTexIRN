@@ -7,19 +7,9 @@
     <link rel="stylesheet" href="style.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
-<body class="home-page preloading">
+<body class="home-page">
 
-    <div id="app-preloader" class="app-preloader">
-        <div class="rocket-scene" aria-hidden="true">
-            <div class="stars"></div>
-            <div class="rocket" id="rocket">
-                <span class="emoji">🚀</span>
-                <span class="flame"></span>
-                <span class="trail"></span>
-            </div>
-        </div>
-        <div class="preloader-title">در حال پرواز...</div>
-    </div>
+
 
     <div class="main-container">
         <header class="page-header">
@@ -55,22 +45,9 @@
 </body>
 <script>
   (function(){
-    function revealPage(){
-      var preloader = document.getElementById('app-preloader');
-      document.body.classList.remove('preloading');
-      document.body.classList.add('page-enter');
-      if (preloader) preloader.classList.add('hidden');
-    }
-    // Start a fallback timer to guarantee reveal (in case animation event is missed)
-    var fallbackTimer = setTimeout(revealPage, 1000);
-    // Prefer revealing exactly when rocket exits the screen
-    document.addEventListener('animationend', function(e){
-      if (e && e.target && e.target.id === 'rocket') {
-        clearTimeout(fallbackTimer);
-        revealPage();
-      }
-    }, { passive: true });
-
+    try {
+      localStorage.setItem('seenWelcome', '1');
+    } catch(e) {}
   })();
 </script>
 </html>
