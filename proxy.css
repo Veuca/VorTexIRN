@@ -352,6 +352,22 @@ header h1 {
 .welcome-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 .btn-primary { background: linear-gradient(45deg, var(--blue-color), var(--purple-color)); color:#fff; border:none; border-radius:12px; padding:12px 18px; font-weight:800; cursor:pointer; }
 .btn-ghost { background: transparent; color: var(--text-color); border:1px solid var(--border-color); border-radius:12px; padding:12px 18px; font-weight:800; cursor:pointer; }
+.welcome-hero-bg { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(900px 600px at 20% 80%, rgba(138,66,255,0.18), transparent 60%), radial-gradient(900px 600px at 80% 20%, rgba(40,90,255,0.18), transparent 60%); z-index: -1; }
+
+/* Enhanced responsive table look */
+.table-wrap { overflow: hidden; }
+.data-table thead { position: sticky; top: 0; z-index: 2; }
+.data-table tbody tr:nth-child(odd) { background: rgba(0,0,0,0.015); }
+.data-table tbody tr:hover { background: rgba(124,77,255,0.06); }
+.copy-link + .copy-link { margin-inline-start: 8px; }
+
+/* Mobile cards style */
+@media (max-width: 720px) {
+    .table-wrap { border-radius: 18px; }
+    .data-table tr { margin: 10px 10px; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 18px var(--shadow-color); }
+    .data-table td { border-bottom: 1px dashed var(--border-color); }
+    .data-table td:last-child { border-bottom: none; }
+}
 
 /* --- Table-like layout (for both V2Ray and Proxy pages) --- */
 .count-badge { font-size: 16px; font-weight: 800; color: var(--text-secondary); }
