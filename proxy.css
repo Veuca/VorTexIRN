@@ -344,6 +344,15 @@ header h1 {
 .config-card .config-meta { flex-wrap: wrap; }
 .config-card .config-meta .ping-badge { margin-inline-start: 4px; }
 
+/* Welcome page */
+.welcome-wrap { max-width: 720px; margin: 0 auto; text-align: center; padding: 30px 20px; }
+.welcome-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 30px; box-shadow: 0 10px 24px var(--shadow-color); }
+.welcome-title { font-size: 36px; font-weight: 900; background: linear-gradient(90deg, var(--blue-color), var(--purple-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+.welcome-sub { color: var(--text-secondary); margin-bottom: 22px; }
+.welcome-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-primary { background: linear-gradient(45deg, var(--blue-color), var(--purple-color)); color:#fff; border:none; border-radius:12px; padding:12px 18px; font-weight:800; cursor:pointer; }
+.btn-ghost { background: transparent; color: var(--text-color); border:1px solid var(--border-color); border-radius:12px; padding:12px 18px; font-weight:800; cursor:pointer; }
+
 /* --- Table-like layout (for both V2Ray and Proxy pages) --- */
 .count-badge { font-size: 16px; font-weight: 800; color: var(--text-secondary); }
 .icon-btn { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 6px 10px; cursor: pointer; box-shadow: 0 4px 10px var(--shadow-color); }

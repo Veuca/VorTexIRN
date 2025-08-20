@@ -9,15 +9,14 @@
 </head>
 <body>
     <div id="app-preloader" class="app-preloader" style="display:flex; align-items:center; justify-content:center;">
-        <div class="rocket-scene" aria-hidden="true">
-            <div class="stars"></div>
+        <div class="preloader-content">
+            <div class="vortex-spinner">
+                <div class="ring"></div>
+                <div class="ring r2"></div>
+                <div class="ring r3"></div>
+            </div>
+            <div class="preloader-title">در حال بارگذاری...</div>
         </div>
-        <div class="rocket" role="img" aria-label="rocket loading">
-            <span class="emoji">🚀</span>
-            <span class="flame"></span>
-            <span class="trail"></span>
-        </div>
-        <div class="preloader-title" style="margin-top: 120px;">در حال بارگذاری...</div>
     </div>
     <div class="container">
         <header>
@@ -76,7 +75,7 @@
       window.addEventListener('load', function () {
         var preloader = document.getElementById('app-preloader');
         if (preloader) {
-          setTimeout(function(){ preloader.classList.add('hidden'); }, 250);
+          setTimeout(function(){ preloader.classList.add('hidden'); }, 400);
         }
       });
     </script>
