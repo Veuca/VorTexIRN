@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         }
     }
+    
 
     function updateSummary() {
         const total = allWorkingProxies.length;
