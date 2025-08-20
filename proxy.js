@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="card-info">
                     <div class="info-item">
                         <span class="info-label">سرور</span>
-                        <span class="info-value">${server}</span>
+                        <span class="info-value">ورتکس</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">پورت</span>
